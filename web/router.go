@@ -27,11 +27,20 @@ func NewRouter() *gin.Engine {
 
 	router := gin.New()
 
-	v1API := router.Group("/apis/user/v1")
+	// v1API := router.Group("/apis/mina/v1")
+	v1API := router.Group("/v1")
 	v1API.Use(
 		middlewares.Jsonifier(),
 	)
-	v1API.GET("/:user", ListUser)
+
+	v1API.GET("/api/user", ListUser)
+	v1API.GET("/api/users", ListUser)
+	v1API.GET("/api/category", ListUser)
+	v1API.GET("/api/lost", ListUser)
+	v1API.GET("/api/topics", ListUser)
+	v1API.GET("/api/weapp/authorizations", ListUser)
+	v1API.GET("/api/weapp/users", ListUser)
+	v1API.GET("/api/wechat", ListUser)
 
 	return router
 }
