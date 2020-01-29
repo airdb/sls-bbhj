@@ -1,7 +1,7 @@
 package mocks
 
 import (
-	"github.com/airdb-template/gin-api/model/po"
+	"github.com/airdb/mina-api/model/po"
 )
 
 var User1 = &po.User{

@@ -6,16 +6,16 @@ import (
 	"net/http/httptest"
 	"os"
 
-	"github.com/airdb-template/gin-api/mocks"
+	"github.com/airdb/mina-api/mocks"
 	"github.com/airdb/sailor/config"
 	"github.com/airdb/sailor/gin/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
 func Run() {
-	config.Init()
-	log.Printf("Env: %s, Port: %s\n", config.GetEnv(), config.GetPort())
-	err := NewRouter().Run("0.0.0.0:" + config.GetPort())
+	log.Printf("Env: %s, bind: %s\n", config.GetEnv(), config.GetDefaultBindAddress())
+	// err := NewRouter().Run("0.0.0.0:" + config.GetPort())
+	err := NewRouter().Run(config.GetDefaultBindAddress())
 
 	if err != nil {
 		log.Println("error: ", err)
@@ -33,10 +33,11 @@ func NewRouter() *gin.Engine {
 		middlewares.Jsonifier(),
 	)
 
+	v1API.GET("/db/initdb", ListUser)
 	v1API.GET("/api/user", ListUser)
 	v1API.GET("/api/users", ListUser)
-	v1API.GET("/api/category", ListUser)
-	v1API.GET("/api/lost", ListUser)
+	v1API.GET("/api/category/list", ListCategory)
+	v1API.GET("/api/lost/list", ListLost)
 	v1API.GET("/api/topics", ListUser)
 	v1API.GET("/api/weapp/authorizations", ListUser)
 	v1API.GET("/api/weapp/users", ListUser)

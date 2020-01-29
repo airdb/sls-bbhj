@@ -3,7 +3,7 @@ package mocks
 import (
 	"fmt"
 
-	"github.com/airdb-template/gin-api/model/po"
+	"github.com/airdb/mina-api/model/po"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // nolint:golint
 )
