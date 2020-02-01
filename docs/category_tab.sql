@@ -9,3 +9,8 @@ CREATE TABLE `category_tab` (
   KEY `idx_category_deleted_at` (`deleted_at`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
 
+insert into category_tab values(0, null, null, null, "家寻宝贝", "");
+insert into category_tab values(0, null, null, null, "宝贝寻家", "");
+insert into category_tab values(0, null, null, null, "海外寻亲", "");
+insert into category_tab values(0, null, null, null, "其他寻人", "");
+insert into category_tab values(0, null, null, null, "流浪乞讨", "");

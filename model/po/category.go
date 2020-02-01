@@ -1,8 +1,6 @@
 package po
 
 import (
-	"log"
-
 	"github.com/airdb/sailor/dbutils"
 	"github.com/jinzhu/gorm"
 )
@@ -17,7 +15,6 @@ func ListCateories() []*Category {
 	var c []*Category
 
 	dbutils.DefaultDB().Debug().Find(&c)
-	log.Println(c[0])
 
 	return c
 }

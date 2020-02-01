@@ -33,15 +33,15 @@ func NewRouter() *gin.Engine {
 		middlewares.Jsonifier(),
 	)
 
-	v1API.GET("/db/initdb", ListUser)
-	v1API.GET("/api/user", ListUser)
-	v1API.GET("/api/users", ListUser)
+	// v1API.GET("/db/initdb", ListUser)
+	// v1API.GET("/api/user", ListUser)
+	// v1API.GET("/api/users", ListUser)
 	v1API.GET("/api/category/list", ListCategory)
 	v1API.GET("/api/lost/list", ListLost)
-	v1API.GET("/api/topics", ListUser)
-	v1API.GET("/api/weapp/authorizations", ListUser)
-	v1API.GET("/api/weapp/users", ListUser)
-	v1API.GET("/api/wechat", ListUser)
+	// v1API.GET("/api/topics", ListUser)
+	// v1API.GET("/api/weapp/authorizations", ListUser)
+	// v1API.GET("/api/weapp/users", ListUser)
+	// v1API.GET("/api/wechat", ListUser)
 
 	return router
 }

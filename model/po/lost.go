@@ -3,10 +3,11 @@ package po
 import (
 	"time"
 
+	"github.com/airdb/sailor/dbutils"
 	"github.com/jinzhu/gorm"
 )
 
-type Babyinfo struct {
+type Lost struct {
 	gorm.Model
 	// ID        string `gorm:"primary_key"`
 	//  Timestamp int64
@@ -37,6 +38,15 @@ type Babyinfo struct {
 	Category       string
 	Height         string
 	SyncStatus     int `gorm:"column:syncstatus;default:0"`
+}
+
+func ListLost() []*Lost {
+	var losts []*Lost
+
+	pagesize := 10
+	dbutils.DefaultDB().Debug().Limit(pagesize).Find(&losts)
+
+	return losts
 }
 
 /*
