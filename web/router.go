@@ -27,6 +27,9 @@ func NewRouter() *gin.Engine {
 
 	router := gin.New()
 
+	APIs := router.Group("/apis")
+	APIs.GET("/bbs/v0/robot/query", QueryBBS)
+
 	// v1API := router.Group("/apis/mina/v1")
 	v1API := router.Group("/v1")
 	v1API.Use(

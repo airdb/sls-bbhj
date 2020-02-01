@@ -26,6 +26,19 @@ type LostSearchReq struct {
 type LostSearchResp struct {
 }
 
+type QQRobotQueryReq struct {
+	QQ      uint   `form:"qq"`
+	Group   uint   `form:"group"`
+	Command string `form:"command"`
+	Message string `form:"message"`
+}
+
+type QQRobotQueryResp string
+
+func QueryBBSByKeyword(keyword string) []*po.Lost {
+	return po.QueryBBSByKeywords(keyword)
+}
+
 type Lost struct {
 	ID        uint       `json:"id"`
 	CreatedAt time.Time  `json:"created_at"`

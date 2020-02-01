@@ -1,10 +1,17 @@
 package po
 
 import (
+	"strings"
 	"time"
 
 	"github.com/airdb/sailor/dbutils"
 	"github.com/jinzhu/gorm"
+)
+
+const (
+	keywordsLen1 = 1
+	keywordsLen2 = 2
+	keywordsLen3 = 3
 )
 
 type Lost struct {
@@ -47,6 +54,34 @@ func ListLost() []*Lost {
 	dbutils.DefaultDB().Debug().Limit(pagesize).Find(&losts)
 
 	return losts
+}
+
+func QueryBBSByKeywords(keyword string) (articles []*Lost) {
+	keys := strings.Split(keyword, " ")
+	pagesize := 5
+
+	switch len(keys) {
+	case keywordsLen3:
+		keys[0] = "%" + keys[0] + "%"
+		keys[1] = "%" + keys[1] + "%"
+		keys[2] = "%" + keys[2] + "%"
+		dbutils.DefaultDB().Where(
+			"subject like ? and subject like ? and subject like ? ", keys[0], keys[1], keys[2],
+		).Select("subject, data_from").Order("missed_at desc").Limit(pagesize).Find(&articles)
+	case keywordsLen2:
+		keys[0] = "%" + keys[0] + "%"
+		keys[1] = "%" + keys[1] + "%"
+		dbutils.DefaultDB().Where(
+			"subject like ? and subject like ? ", keys[0], keys[1],
+		).Select("subject, data_from").Order("missed_at desc").Limit(pagesize).Find(&articles)
+	case keywordsLen1:
+		keys[0] = "%" + keys[0] + "%"
+		dbutils.DefaultDB().Debug().Where(
+			"subject like ?", keys[0],
+		).Select("subject, data_from").Order("missed_at desc").Limit(pagesize).Find(&articles)
+	}
+
+	return
 }
 
 /*
