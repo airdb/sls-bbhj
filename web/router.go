@@ -27,8 +27,20 @@ func NewRouter() *gin.Engine {
 
 	router := gin.New()
 
+	router.GET("/", Status)
+
 	APIs := router.Group("/apis")
 	APIs.GET("/bbs/v0/robot/query", QueryBBS)
+
+	// v1API := router.Group("/apis/mina/v1")
+	v2API := router.Group("/apis/mina/v1")
+	v2API.Use(
+		middlewares.Jsonifier(),
+	)
+
+	v2API.GET("/robot/query", QueryBBS)
+	v2API.GET("/category/list", ListCategory)
+	v2API.GET("/lost/list", ListLost)
 
 	// v1API := router.Group("/apis/mina/v1")
 	v1API := router.Group("/v1")
@@ -45,6 +57,8 @@ func NewRouter() *gin.Engine {
 	// v1API.GET("/api/weapp/authorizations", ListUser)
 	// v1API.GET("/api/weapp/users", ListUser)
 	// v1API.GET("/api/wechat", ListUser)
+
+	// router.Use(Logger(), Recovery())
 
 	return router
 }
