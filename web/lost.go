@@ -1,7 +1,9 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/airdb/mina-api/model/vo"
 	"github.com/airdb/sailor/enum"
@@ -11,6 +13,23 @@ import (
 
 func ListLost(c *gin.Context) {
 	resp := vo.ListLost()
+
+	middlewares.SetResp(
+		c,
+		enum.AirdbSuccess,
+		resp,
+	)
+}
+
+func QueryLost(c *gin.Context) {
+	// id := c.Param("id")
+	uint64, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	id := uint(uint64)
+	resp := vo.QueryLost(&id)
 
 	middlewares.SetResp(
 		c,

@@ -1,6 +1,7 @@
 package po
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -54,6 +55,16 @@ func ListLost() []*Lost {
 	dbutils.DefaultDB().Debug().Limit(pagesize).Find(&losts)
 
 	return losts
+}
+
+func QueryLostByID(id *uint) *Lost {
+	// var lost Lost
+	lost := Lost{}
+
+	fmt.Print("xxxx", id)
+	dbutils.DefaultDB().Debug().First(&lost, *id)
+
+	return &lost
 }
 
 func QueryBBSByKeywords(keyword string) (articles []*Lost) {

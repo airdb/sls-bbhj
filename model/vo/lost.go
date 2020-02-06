@@ -122,3 +122,7 @@ func ListLost() []*Lost {
 
 	return losts
 }
+
+func QueryLost(id *uint) *Lost {
+	return FromPoLost(po.QueryLostByID(id))
+}

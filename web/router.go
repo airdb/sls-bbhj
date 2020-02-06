@@ -29,34 +29,19 @@ func NewRouter() *gin.Engine {
 
 	router.GET("/", Status)
 
-	APIs := router.Group("/apis")
-	APIs.GET("/bbs/v0/robot/query", QueryBBS)
-
 	// v1API := router.Group("/apis/mina/v1")
-	v2API := router.Group("/apis/mina/v1")
-	v2API.Use(
-		middlewares.Jsonifier(),
-	)
+	v1API := router.Group("/apis/mina/v1")
+	// For QQ robot.
+	v1API.GET("/robot/query", QueryBBS)
 
-	v2API.GET("/robot/query", QueryBBS)
-	v2API.GET("/category/list", ListCategory)
-	v2API.GET("/lost/list", ListLost)
-
-	// v1API := router.Group("/apis/mina/v1")
-	v1API := router.Group("/v1")
 	v1API.Use(
 		middlewares.Jsonifier(),
 	)
 
-	// v1API.GET("/db/initdb", ListUser)
-	// v1API.GET("/api/user", ListUser)
-	// v1API.GET("/api/users", ListUser)
-	v1API.GET("/api/category/list", ListCategory)
-	v1API.GET("/api/lost/list", ListLost)
-	// v1API.GET("/api/topics", ListUser)
-	// v1API.GET("/api/weapp/authorizations", ListUser)
-	// v1API.GET("/api/weapp/users", ListUser)
-	// v1API.GET("/api/wechat", ListUser)
+	v1API.GET("/category/list", ListCategory)
+	v1API.GET("/lost/list", ListLost)
+	v1API.GET("/lost/query/:id", QueryLost)
+	v1API.GET("/lost/query", QueryLost)
 
 	// router.Use(Logger(), Recovery())
 
@@ -64,30 +49,14 @@ func NewRouter() *gin.Engine {
 }
 
 func APIRequest(uri, method string, param io.Reader) *httptest.ResponseRecorder {
-	// Change to the root directory for handler test case.
-	wd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	defer func() {
-		err = os.Chdir(wd)
+	if os.Getenv("TESTDB") == "sqlite" {
+		db, err := mocks.SetUpMockDatabases()
 		if err != nil {
 			panic(err)
 		}
-	}()
 
-	err = os.Chdir("../")
-	if err != nil {
-		panic(err)
+		defer mocks.DestroyMockDatabases(db)
 	}
-
-	db, err := mocks.SetUpMockDatabases()
-	if err != nil {
-		panic(err)
-	}
-
-	defer mocks.DestroyMockDatabases(db)
 
 	req := httptest.NewRequest(method, uri, param)
 
