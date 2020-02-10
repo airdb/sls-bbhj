@@ -8,7 +8,6 @@ import (
 
 	"github.com/airdb/mina-api/mocks"
 	"github.com/airdb/sailor/config"
-	"github.com/airdb/sailor/gin/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,23 +24,18 @@ func Run() {
 func NewRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 
-	router := gin.New()
-
+	router := gin.Default()
 	router.GET("/", Status)
 
-	// v1API := router.Group("/apis/mina/v1")
 	v1API := router.Group("/apis/mina/v1")
 	// For QQ robot.
 	v1API.GET("/robot/query", QueryBBS)
-
-	v1API.Use(
-		middlewares.Jsonifier(),
-	)
 
 	v1API.GET("/category/list", ListCategory)
 	v1API.GET("/lost/list", ListLost)
 	v1API.GET("/lost/query/:id", QueryLost)
 	v1API.GET("/lost/query", QueryLost)
+	v1API.GET("/user/login", Login)
 
 	// router.Use(Logger(), Recovery())
 

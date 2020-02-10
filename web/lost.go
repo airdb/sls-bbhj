@@ -6,19 +6,18 @@ import (
 	"strconv"
 
 	"github.com/airdb/mina-api/model/vo"
+	"github.com/airdb/sailor"
 	"github.com/airdb/sailor/enum"
-	"github.com/airdb/sailor/gin/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
 func ListLost(c *gin.Context) {
-	resp := vo.ListLost()
+	var resp sailor.HTTPAirdbResponse
+	resp.Data = vo.ListLost()
+	resp.Code = enum.AirdbSuccess
+	resp.Success = true
 
-	middlewares.SetResp(
-		c,
-		enum.AirdbSuccess,
-		resp,
-	)
+	c.JSON(http.StatusOK, resp)
 }
 
 func QueryLost(c *gin.Context) {
@@ -29,13 +28,13 @@ func QueryLost(c *gin.Context) {
 	}
 
 	id := uint(uint64)
-	resp := vo.QueryLost(&id)
 
-	middlewares.SetResp(
-		c,
-		enum.AirdbSuccess,
-		resp,
-	)
+	var resp sailor.HTTPAirdbResponse
+	resp.Data = vo.QueryLost(&id)
+	resp.Code = enum.AirdbSuccess
+	resp.Success = true
+
+	c.JSON(http.StatusOK, resp)
 }
 
 /*

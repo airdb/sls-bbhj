@@ -1,18 +1,19 @@
 package web
 
 import (
+	"net/http"
+
 	"github.com/airdb/mina-api/model/vo"
+	"github.com/airdb/sailor"
 	"github.com/airdb/sailor/enum"
-	"github.com/airdb/sailor/gin/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
 func ListCategory(c *gin.Context) {
-	resp := vo.ListCategory()
+	var resp sailor.HTTPAirdbResponse
+	resp.Data = vo.ListCategory()
+	resp.Code = enum.AirdbSuccess
+	resp.Success = true
 
-	middlewares.SetResp(
-		c,
-		enum.AirdbSuccess,
-		resp,
-	)
+	c.JSON(http.StatusOK, resp)
 }
