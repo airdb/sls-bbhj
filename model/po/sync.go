@@ -10,7 +10,7 @@ type PreForumPost struct {
 	Subject  string `json:"subject"`
 	Useip    string `json:"useip"`
 	Pid      int64  `json:"pid"`
-	Tid      int64  `json:"tid"`
+	Tid      uint   `json:"tid"`
 	Authorid int64  `json:"authorid"`
 }
 
@@ -29,4 +29,13 @@ func GetBBSArticles() (preForumPost []PreForumPost) {
 	dbutils.ReadDB(dbName).Raw(sqltext).Scan(&preForumPost)
 
 	return
+}
+
+func GetBBSArticleByID(tid uint) *PreForumPost {
+	var preForumPost PreForumPost
+
+	dbName := "READ_GDBC"
+	dbutils.ReadDB(dbName).Table("pre_forum_post").Where("tid = ? and first is true", tid).First(&preForumPost)
+
+	return &preForumPost
 }

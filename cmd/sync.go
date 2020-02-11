@@ -1,16 +1,25 @@
 package main
 
 import (
-	"fmt"
+	"sync"
+	"time"
 
-	"github.com/airdb/mina-api/model/po"
+	"github.com/airdb/mina-api/model/bo"
 	"github.com/airdb/sailor/dbutils"
 )
 
 func main() {
 	dbutils.InitDefault()
 
-	aa := po.GetBBSArticles()
+	wg := sync.WaitGroup{}
+	interval := 300
+	queueLen := 1
 
-	fmt.Print(aa)
+	for {
+		wg.Add(queueLen)
+		// go bo.SyncAWSRoute53(&wg)
+		bo.SyncFrombbs(&wg)
+		wg.Wait()
+		<-time.After(time.Duration(interval) * time.Second)
+	}
 }
