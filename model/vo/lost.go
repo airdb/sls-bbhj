@@ -1,29 +1,32 @@
 package vo
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/airdb/mina-api/model/po"
 )
 
-type LostListReq struct {
-	Code  string `form:"code"`
-	State string `form:"state"`
+type ListLostReq struct {
+	Category uint `form:"category"`
+	Page     uint `form:"page"`
+	PageSize uint `form:"pageSize"`
 }
 
-type LostListResp struct {
+type ListLostResp struct {
 }
 
-type LostQueryReq struct {
+type QueryListReq struct {
 }
 
-type LostQueryResp struct {
+type QueryListResp struct {
 }
 
-type LostSearchReq struct {
+type SearchLostReq struct {
+	Keywords string `json:"keywords"`
 }
 
-type LostSearchResp struct {
+type SearchLostResp struct {
 }
 
 type QQRobotQueryReq struct {
@@ -74,6 +77,8 @@ type Lost struct {
 }
 
 func FromPoLost(lost *po.Lost) *Lost {
+	fmt.Println("xxx", lost)
+
 	return &Lost{
 		ID:              lost.ID,
 		CreatedAt:       lost.CreatedAt,
@@ -116,13 +121,21 @@ func FromPoLosts(losts []*po.Lost) []*Lost {
 	return _losts
 }
 
-func ListLost() []*Lost {
+func ListLost(req ListLostReq) []*Lost {
 	losts := []*Lost{}
-	losts = append(losts, FromPoLosts(po.ListLost())...)
+	losts = append(losts, FromPoLosts(po.ListLost(req.Page, req.PageSize))...)
 
 	return losts
 }
 
 func QueryLost(id *uint) *Lost {
 	return FromPoLost(po.QueryLostByID(id))
+}
+
+func SearchLost(keywords string) []*Lost {
+	var losts []*Lost
+
+	losts = append(losts, FromPoLosts(po.SearchLost(keywords))...)
+
+	return losts
 }

@@ -14,15 +14,20 @@ func dropRecords(db *gorm.DB) {
 
 func setUpRecords(db *gorm.DB) {
 	db.Create(User1)
+	db.Create(Lost1)
 }
 
 func SetUpMockDatabases() (*gorm.DB, error) {
 	// Set up mock database.
-	dbName := "dns_db"
-	// db, err := gorm.Open("sqlite3", "dev_shopee_space_dns_db")
+	dbName := "testdb"
 
 	db, err := gorm.Open("sqlite3", dbName)
 	db.SingularTable(true)
+
+	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+		return defaultTableName + "_tab"
+	}
+
 	db.Callback().Delete().Remove("gorm:delete")
 	db.Callback().Update().Remove("gorm:update_time_stamp")
 	db.Callback().Create().Remove("gorm:update_time_stamp")
@@ -35,6 +40,7 @@ func SetUpMockDatabases() (*gorm.DB, error) {
 
 	// Migrate the schema.
 	db.AutoMigrate(&po.User{})
+	db.AutoMigrate(&po.Lost{})
 
 	// Create records.
 	setUpRecords(db)

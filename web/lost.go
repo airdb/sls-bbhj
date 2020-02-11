@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -12,14 +13,34 @@ import (
 )
 
 func ListLost(c *gin.Context) {
+	var req vo.ListLostReq
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, &sailor.HTTPAirdbResponse{
+			Code:    enum.AirdbUndefined,
+			Success: false,
+			Data:    nil,
+			Error:   "不合法的请求参数",
+		})
+
+		return
+	}
+
+	log.Println(req.Category, req.Page, req.PageSize)
+
 	var resp sailor.HTTPAirdbResponse
-	resp.Data = vo.ListLost()
+
+	resp.Data = vo.ListLost(req)
 	resp.Code = enum.AirdbSuccess
 	resp.Success = true
 
 	c.JSON(http.StatusOK, resp)
 }
 
+// @Description get lost info by id
+// @Param	id		path 	string	true		"The key for staticblock"
+// @Success 200 {object} models.User
+// @Failure 403 :id is empty
+// @router /detail/:id [get]
 func QueryLost(c *gin.Context) {
 	// id := c.Param("id")
 	uint64, err := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -37,93 +58,34 @@ func QueryLost(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-/*
-// @Title GetAll
-// @Description get all Users
-// @Success 200 {object} models.User
-// @router / [get]
-func (u *LostController) GetAll() {
-	// var state models.State
-	var ret models.RetDataList
-	ret.State.Code = 200
-	ret.State.Status = "success"
-	ret.State.Message = ""
-
-	u.Data["json"] = ret
-
-	u.ServeJSON()
-}
-
-// @Title GetAll
-// @Description get all Users
-// @Success 200 {object} models.User
-// @router /list [get]
-func (u *LostController) List() {
-	category, _ := u.GetInt("category")
-	page, _ := u.GetInt("page")
-	pageSize, _ := u.GetInt("pageSize")
-
-	beego.Error("=======", category, page, pageSize)
-	ulist, _ := models.GetAllBabyinfo(category, page, pageSize)
-	u.Data["json"] = ulist
-	// var state models.State
-	var ret models.RetDataList
-	ret.State.Code = 200
-	ret.State.Status = "success"
-	ret.State.Message = ""
-
-	// u.Data["json"] = map[string]string{"State": state}
-	ret.Data = ulist
-	u.Data["json"] = ret
-
-	u.ServeJSON()
-}
-
 // @Title Get
 // @Description get lost info by id
 // @Param	id		path 	string	true		"The key for staticblock"
 // @Success 200 {object} models.User
 // @Failure 403 :id is empty
 // @router /detail/:id [get]
-func (u *LostController) Get() {
+func SearchLost(c *gin.Context) {
+	var req vo.SearchLostReq
 
-	id, _ := u.GetInt(":id")
-	info, _ := models.GetBabyinfoById(id)
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, &sailor.HTTPAirdbResponse{
+			Code:    enum.AirdbUndefined,
+			Success: false,
+			Data:    nil,
+			Error:   "不合法的请求参数",
+		})
 
-	var ret models.RetDataList
-	ret.State.Code = 200
-	ret.State.Status = "success"
-	ret.State.Message = ""
+		return
+	}
 
-	ret.Data = info
-	u.Data["json"] = ret
-	u.ServeJSON()
+	resp := vo.SearchLost(req.Keywords)
+
+	c.JSON(http.StatusOK, &sailor.HTTPAirdbResponse{
+		Code:    enum.AirdbSuccess,
+		Success: true,
+		Data:    resp,
+	})
 }
-
-// @Title Search lost info
-// @Description get lost info by id
-// @Param	id		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.User
-// @Failure 403 :id is empty
-// @router /search [post]
-func (u *LostController) Search() {
-
-	var condition models.SearchBabyinfo
-	json.Unmarshal(u.Ctx.Input.RequestBody, &condition)
-
-	beego.Error(condition)
-	ulist, _ := models.GetAllBabyinfoByCondition(condition.Keywords)
-
-	var ret models.RetDataList
-	ret.State.Code = 200
-	ret.State.Status = "success"
-	ret.State.Message = ""
-
-	ret.Data = ulist
-	u.Data["json"] = ret
-	u.ServeJSON()
-}
-*/
 
 // QueryBBS godoc
 // @Summary for QQ robot query article

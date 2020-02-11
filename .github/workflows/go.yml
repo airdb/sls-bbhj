@@ -18,3 +18,6 @@ jobs:
 
     - name: Build
       run: go build -v -o main main.go
+
+    #- name: Test
+      #run: TESTDB=sqlite go test -count=1 -v ./... -short=false

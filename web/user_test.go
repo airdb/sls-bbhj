@@ -6,8 +6,8 @@ import (
 )
 
 func TestListUser(t *testing.T) {
-	uri := "/apis/user/v1/dean"
-	resp := APIRequest(uri, "GET", nil)
+	uri := "/apis/mina/v1/user/login"
+	resp := APIRequest(uri, http.MethodPost, nil)
 
 	if resp.Code != http.StatusOK {
 		t.Error(uri, resp.Code)

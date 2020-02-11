@@ -8,6 +8,7 @@ import (
 
 	"github.com/airdb/mina-api/mocks"
 	"github.com/airdb/sailor/config"
+	"github.com/airdb/sailor/dbutils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,7 +36,8 @@ func NewRouter() *gin.Engine {
 	v1API.GET("/lost/list", ListLost)
 	v1API.GET("/lost/query/:id", QueryLost)
 	v1API.GET("/lost/query", QueryLost)
-	v1API.GET("/user/login", Login)
+	v1API.GET("/lost/search", SearchLost)
+	v1API.POST("/user/login", Login)
 
 	// router.Use(Logger(), Recovery())
 
@@ -50,6 +52,8 @@ func APIRequest(uri, method string, param io.Reader) *httptest.ResponseRecorder 
 		}
 
 		defer mocks.DestroyMockDatabases(db)
+	} else {
+		dbutils.InitDefault()
 	}
 
 	req := httptest.NewRequest(method, uri, param)

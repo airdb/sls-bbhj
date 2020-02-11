@@ -1,7 +1,6 @@
 package po
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
@@ -48,23 +47,49 @@ type Lost struct {
 	SyncStatus     int `gorm:"column:syncstatus;default:0"`
 }
 
-func ListLost() []*Lost {
+func ListLost(page, pageSize uint) []*Lost {
 	var losts []*Lost
 
-	pagesize := 10
-	dbutils.DefaultDB().Debug().Limit(pagesize).Find(&losts)
+	dbutils.DefaultDB().Debug().Offset(page * pageSize).Limit(pageSize).Find(&losts)
 
 	return losts
 }
 
 func QueryLostByID(id *uint) *Lost {
-	// var lost Lost
-	lost := Lost{}
+	var lost Lost
 
-	fmt.Print("xxxx", id)
 	dbutils.DefaultDB().Debug().First(&lost, *id)
 
 	return &lost
+}
+
+func SearchLost(keywords string) (losts []*Lost) {
+	keys := strings.Split(keywords, " ")
+
+	pagesize := 20
+
+	switch len(keys) {
+	case keywordsLen3:
+		keys[0] = "%" + keys[0] + "%"
+		keys[1] = "%" + keys[1] + "%"
+		keys[2] = "%" + keys[2] + "%"
+		dbutils.DefaultDB().Where(
+			"subject like ? and subject like ? and subject like ? ", keys[0], keys[1], keys[2],
+		).Order("missed_at desc").Limit(pagesize).Find(&losts)
+	case keywordsLen2:
+		keys[0] = "%" + keys[0] + "%"
+		keys[1] = "%" + keys[1] + "%"
+		dbutils.DefaultDB().Where(
+			"subject like ? and subject like ? ", keys[0], keys[1],
+		).Order("missed_at desc").Limit(pagesize).Find(&losts)
+	case keywordsLen1:
+		keys[0] = "%" + keys[0] + "%"
+		dbutils.DefaultDB().Debug().Where(
+			"subject like ?", keys[0],
+		).Order("missed_at desc").Limit(pagesize).Find(&losts)
+	}
+
+	return losts
 }
 
 func QueryBBSByKeywords(keyword string) (articles []*Lost) {
