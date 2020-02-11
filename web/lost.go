@@ -36,11 +36,6 @@ func ListLost(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-// @Description get lost info by id
-// @Param	id		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.User
-// @Failure 403 :id is empty
-// @router /detail/:id [get]
 func QueryLost(c *gin.Context) {
 	// id := c.Param("id")
 	uint64, err := strconv.ParseUint(c.Param("id"), 10, 32)
@@ -58,12 +53,6 @@ func QueryLost(c *gin.Context) {
 	c.JSON(http.StatusOK, resp)
 }
 
-// @Title Get
-// @Description get lost info by id
-// @Param	id		path 	string	true		"The key for staticblock"
-// @Success 200 {object} models.User
-// @Failure 403 :id is empty
-// @router /detail/:id [get]
 func SearchLost(c *gin.Context) {
 	var req vo.SearchLostReq
 
