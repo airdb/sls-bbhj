@@ -9,8 +9,6 @@ jobs:
 
     - name: Set up Go
       uses: actions/setup-go@v1
-      with:
-        go-version: latest
       id: go
 
     - name: Check out code into the Go module directory
