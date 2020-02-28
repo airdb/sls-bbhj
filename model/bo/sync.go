@@ -193,10 +193,14 @@ func parseHTML(datafrom, title, msg string) (article po.Lost) {
 	}
 
 	for _, info := range infoList {
-		log.Println("xxxxx", info)
+		if info == "" {
+			continue
+		}
+
+		log.Println(info)
 		info = strings.TrimLeft(info, "\n")
 
-		if info == "" || strings.Contains(info, "本帖最后由") {
+		if strings.Contains(info, "本帖最后由") {
 			if strings.Contains(info, "本帖最后由") {
 				start = false
 			}
@@ -310,6 +314,8 @@ func SyncFrombbs(wg *sync.WaitGroup) {
 			// po.UpdateArticle(article)
 			article.SyncStatus = -1
 		}
+
+		po.CreateLost(article)
 	}
 }
 
@@ -318,6 +324,9 @@ func SyncFrombbsByID(tid uint) {
 	datafrom := fmt.Sprintf("https://bbs.baobeihuijia.com/thread-%d-1-1.html", preForumPost.Tid)
 	msg := trimHTML(preForumPost.Message)
 
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
 	article := parseHTML(datafrom, preForumPost.Subject, msg)
-	log.Println(article)
+	log.Println(article.Babyid)
+	log.Println(msg)
 }

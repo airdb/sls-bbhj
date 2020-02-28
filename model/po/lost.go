@@ -120,6 +120,10 @@ func QueryBBSByKeywords(keyword string) (articles []*Lost) {
 	return
 }
 
+func CreateLost(lost Lost) {
+	dbutils.WriteDB("WRITE_GDBC").Save(&lost)
+}
+
 /*
 //func GetAllBabyinfo() (data []Babyinfo, err error) {
 //	pagesize := 10
