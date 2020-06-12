@@ -23,7 +23,7 @@ func GetBBSArticles() (preForumPost []PreForumPost) {
 	//sqltext += " and subject like '%3313%' "
 	// sqltext += " and tid = 193856 "
 	sqltext += " order by pid desc"
-	// sqltext += " limit 10 offset 0"
+	sqltext += " limit 10 offset 0"
 	dbutils.ReadDB(dbBbhjBBSRead).Raw(sqltext).Scan(&preForumPost)
 
 	return

@@ -14,7 +14,7 @@ func InitDB() {
 	dbNames = append(dbNames,
 		dbBbhjBBSRead,
 		dbMinaAPIRead,
-		// dbMinaAPIWirte,
+		dbMinaAPIWirte,
 	)
 
 	dbutils.InitDB(dbNames)
