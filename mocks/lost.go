@@ -9,7 +9,7 @@ import (
 
 var Lost1 = &po.Lost{
 	Model: gorm.Model{
-		ID: 1, // nolint:gomnd
+		ID: 1,
 	},
 
 	UUID:            "300ad9b5-afc8-41ff-972d-163bfed47b91",

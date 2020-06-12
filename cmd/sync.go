@@ -5,11 +5,11 @@ import (
 	"time"
 
 	"github.com/airdb/mina-api/model/bo"
-	"github.com/airdb/sailor/dbutils"
+	"github.com/airdb/mina-api/model/po"
 )
 
 func main() {
-	dbutils.InitDefault()
+	po.InitDB()
 
 	wg := sync.WaitGroup{}
 	interval := 300

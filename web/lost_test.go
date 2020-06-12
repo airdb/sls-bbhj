@@ -1,4 +1,4 @@
-package web
+package web_test
 
 import (
 	"encoding/json"
@@ -7,12 +7,13 @@ import (
 	"testing"
 
 	"github.com/airdb/mina-api/model/vo"
+	"github.com/airdb/mina-api/web"
 	"github.com/airdb/sailor"
 )
 
 func TestStatus(t *testing.T) {
 	uri := "/?aaaa=a1"
-	resp := APIRequest(uri, "GET", nil)
+	resp := web.APIRequest(uri, "GET", nil)
 
 	if resp.Code != http.StatusOK {
 		t.Error(uri, resp.Code)
@@ -25,7 +26,7 @@ func TestStatus(t *testing.T) {
 
 func TestQueryLost(t *testing.T) {
 	uri := "/apis/mina/v1/lost/query/1"
-	resp := APIRequest(uri, "GET", nil)
+	resp := web.APIRequest(uri, "GET", nil)
 
 	if resp.Code != http.StatusOK {
 		t.Error(uri, resp.Code)
@@ -44,7 +45,7 @@ func TestQueryLost(t *testing.T) {
 func TestLostList(t *testing.T) {
 	uri := "/apis/mina/v1/lost/list?category=1&page=0&pageSize=10"
 
-	resp := APIRequest(uri, http.MethodGet, nil)
+	resp := web.APIRequest(uri, http.MethodGet, nil)
 
 	if resp.Code != http.StatusOK {
 		t.Error(uri, resp.Code)

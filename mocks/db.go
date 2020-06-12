@@ -5,7 +5,7 @@ import (
 
 	"github.com/airdb/mina-api/model/po"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite" // nolint:golint
+	_ "github.com/jinzhu/gorm/dialects/sqlite" //
 )
 
 func dropRecords(db *gorm.DB) {

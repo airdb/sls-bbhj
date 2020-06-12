@@ -15,8 +15,6 @@ type PreForumPost struct {
 }
 
 func GetBBSArticles() (preForumPost []PreForumPost) {
-	dbName := "READ_GDBC"
-
 	sqltext := ""
 	sqltext = "select * from pre_forum_post where  subject != '' "
 	// sqltext += " and message like '%登记信息%宝贝回家编号%' "
@@ -25,8 +23,8 @@ func GetBBSArticles() (preForumPost []PreForumPost) {
 	//sqltext += " and subject like '%3313%' "
 	// sqltext += " and tid = 193856 "
 	sqltext += " order by pid desc"
-	sqltext += " limit 10 offset 0"
-	dbutils.ReadDB(dbName).Raw(sqltext).Scan(&preForumPost)
+	// sqltext += " limit 10 offset 0"
+	dbutils.ReadDB(dbBbhjBBSRead).Raw(sqltext).Scan(&preForumPost)
 
 	return
 }
@@ -34,8 +32,7 @@ func GetBBSArticles() (preForumPost []PreForumPost) {
 func GetBBSArticleByID(tid uint) *PreForumPost {
 	var preForumPost PreForumPost
 
-	dbName := "READ_GDBC"
-	dbutils.ReadDB(dbName).Table("pre_forum_post").Where("tid = ? and first is true", tid).First(&preForumPost)
+	dbutils.ReadDB(dbBbhjBBSRead).Table("pre_forum_post").Where("tid = ? and first is true", tid).First(&preForumPost)
 
 	return &preForumPost
 }

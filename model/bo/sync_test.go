@@ -1,15 +1,16 @@
-package bo
+package bo_test
 
 import (
 	"testing"
 
-	"github.com/airdb/sailor/dbutils"
+	"github.com/airdb/mina-api/model/bo"
+	"github.com/airdb/mina-api/model/po"
 )
 
 func TestSyncFrombbsByID(t *testing.T) {
-	dbutils.InitDefault()
+	po.InitDB()
 
 	var tid uint = 425750
 
-	SyncFrombbsByID(tid)
+	bo.SyncFrombbsByID(tid)
 }

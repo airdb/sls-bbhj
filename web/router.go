@@ -3,19 +3,27 @@ package web
 import (
 	"io"
 	"log"
+	"net/http"
 	"net/http/httptest"
 	"os"
 
 	"github.com/airdb/mina-api/mocks"
-	"github.com/airdb/sailor/config"
-	"github.com/airdb/sailor/dbutils"
+	"github.com/airdb/mina-api/model/po"
 	"github.com/gin-gonic/gin"
 )
 
 func Run() {
-	log.Printf("Env: %s, bind: %s\n", config.GetEnv(), config.GetDefaultBindAddress())
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		defaultPort := "8081"
+		port = defaultPort
+		os.Setenv("PORT", defaultPort)
+	}
+
+	log.Printf("Env: %s, bind: %s\n", os.Getenv("ENV"), port)
 	// err := NewRouter().Run("0.0.0.0:" + config.GetPort())
-	err := NewRouter().Run(config.GetDefaultBindAddress())
+	err := NewRouter().Run("0.0.0.0:" + port)
 
 	if err != nil {
 		log.Println("error: ", err)
@@ -53,14 +61,14 @@ func APIRequest(uri, method string, param io.Reader) *httptest.ResponseRecorder 
 
 		defer mocks.DestroyMockDatabases(db)
 	} else {
-		dbutils.InitDefault()
+		po.InitDB()
 	}
 
 	req := httptest.NewRequest(method, uri, param)
 
-	if method == "GET" {
+	if method == http.MethodGet {
 		req.Header.Set("Content-Type", "application/json")
-	} else if method == "POST" {
+	} else if method == http.MethodPost {
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	}
 

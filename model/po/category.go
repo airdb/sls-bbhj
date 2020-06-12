@@ -14,7 +14,7 @@ type Category struct {
 func ListCateories() []*Category {
 	var c []*Category
 
-	dbutils.DefaultDB().Debug().Find(&c)
+	dbutils.ReadDB(dbMinaAPIRead).Debug().Find(&c)
 
 	return c
 }
@@ -22,7 +22,7 @@ func ListCateories() []*Category {
 func QueryCategory() *Category {
 	var c Category
 
-	dbutils.DefaultDB().First(&c)
+	dbutils.ReadDB(dbMinaAPIRead).First(&c)
 
 	return &c
 }

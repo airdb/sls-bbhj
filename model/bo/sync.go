@@ -92,7 +92,7 @@ var (
 	value string
 )
 
-// 去掉html中所有标签
+// 去掉html中所有标签.
 func trimHTML(src string) string {
 	re := regexp.MustCompile(`\<[\S\s]+?\>`)
 	//将HTML标签全转换成小写

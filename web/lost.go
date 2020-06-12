@@ -84,7 +84,7 @@ func SearchLost(c *gin.Context) {
 // @Produce  json
 // @Param req body vo.QQRobotQueryReq true "Message"
 // @Success 200 {string} string vo.QQRobotQueryResp
-// @Router /robot/query [get]
+// @Router /robot/query [get].
 func QueryBBS(c *gin.Context) {
 	var req vo.QQRobotQueryReq
 	if err := c.ShouldBindQuery(&req); err != nil {
