@@ -1,4 +1,4 @@
-CREATE TABLE `lost` (
+CREATE TABLE `tab_lost` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
