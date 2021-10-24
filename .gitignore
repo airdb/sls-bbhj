@@ -1,2 +1,8 @@
-.idea/*
-conf/*
+docs
+main
+.vscode/
+.idea/
+.env*
+!.env.example
+.DS_Store
+__debug_bin
