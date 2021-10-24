@@ -11,8 +11,8 @@ github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbt
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV/sSk/8dngufqelfh6jnri85riMAaF/M=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
 github.com/airdb/sailor v0.0.0-20210905152253-99ba97e2e89a/go.mod h1:YgoCpQb0uVILdGCgniE695ig8kR+DiTRyeoSvHhsvCs=
-github.com/airdb/sailor v0.0.0-20211024114313-502d9e6334c0 h1:681d+j92H6O2OlmCqw7Dp87qgxajhnlp90co5Je1tso=
-github.com/airdb/sailor v0.0.0-20211024114313-502d9e6334c0/go.mod h1:YgoCpQb0uVILdGCgniE695ig8kR+DiTRyeoSvHhsvCs=
+github.com/airdb/sailor v0.0.0-20211024160747-2ae4b0a65130 h1:Rrs57rlDq+KwgKlo+uSPuruz3sx8DPYR72+J7DhnlHs=
+github.com/airdb/sailor v0.0.0-20211024160747-2ae4b0a65130/go.mod h1:YgoCpQb0uVILdGCgniE695ig8kR+DiTRyeoSvHhsvCs=
 github.com/airdb/wxwork-kf v0.0.0-20211008114408-4dc096a4217a h1:4XRKmMqIS09HkzN/vxYyFbLtvjV8UkaeIneo92Cb498=
 github.com/airdb/wxwork-kf v0.0.0-20211008114408-4dc096a4217a/go.mod h1:LMnteRfIsIEGonat2pKpJgizva6Kgy9fech4PqPr7gI=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=

@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/airdb/sailor/deployutil"
 	"github.com/airdb/sailor/faas"
@@ -41,19 +42,23 @@ func main() {
 	mux.Use(middleware.Logger)
 	// mux.Use(render.SetContentType(render.ContentTypeHTML))
 
-	mux.Route("/dean", func(r chi.Router) {
-		r.Get("/", faas.HandleVersion)
+	project := "mina"
+	// p := filepath.Join("/", deployutil.GetDeployStage(), "/", project)
+	p := filepath.Join("/", project)
+
+	mux.Route(p, func(r chi.Router) {
+		// r.Get("/", faas.HandleVersion)
 		r.Get("/version", faas.HandleVersion)
 
 		r.Get("/wechat/check_session", api.CheckSession)
 
-		r.Get("/lost/list", api.LostList)
-		r.Get("/lost/search", api.LostSearch)
+		r.Get("/v1/lost/list", api.LostList)
+		r.Get("/v1/lost/search", api.LostSearch)
 
-		r.Get("/rescue/list", api.RescueList)
-		r.Get("/rescue/search", api.RescueSearch)
+		r.Get("/v1/rescue/list", api.RescueList)
+		r.Get("/v1/rescue/search", api.RescueSearch)
 	})
 
 	// http.ListenAndServe(":3333", mux)
-	faas.RunTencentChiWithSwagger(mux, "dean")
+	faas.RunTencentChiWithSwagger(mux, project)
 }

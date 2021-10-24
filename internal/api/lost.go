@@ -3,10 +3,12 @@ package api
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sls-mina/internal/repository"
 	"github.com/airdb/sls-mina/internal/repository/store"
+	"github.com/airdb/sls-mina/pkg/schema"
 	"github.com/go-chi/render"
 )
 
@@ -22,7 +24,18 @@ type Reply struct {
 // @Produce json
 // @Success 200 {string} response "api response"
 // @Router /lost/list [get]
+// /mina/v1/lost/list?pageNo=1&pageSize=10
 func LostList(w http.ResponseWriter, r *http.Request) {
+	req := schema.LostListReq{}
+
+	pageNoStr := r.URL.Query().Get("pageNo")
+	req.PageNo, _ = strconv.Atoi(pageNoStr)
+
+	pageSizeStr := r.URL.Query().Get("pageSize")
+	req.PageSize, _ = strconv.Atoi(pageSizeStr)
+
+	log.Println(req)
+
 	// w.Write([]byte("welcome hello"))
 	var s Reply
 
@@ -43,7 +56,12 @@ func LostList(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("item", items)
 
-	render.JSON(w, r, items)
+	resp := schema.LostListResp{
+		Data:    items,
+		Success: true,
+	}
+
+	render.JSON(w, r, resp)
 	w.WriteHeader(http.StatusOK)
 }
 

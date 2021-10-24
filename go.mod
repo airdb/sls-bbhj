@@ -3,7 +3,7 @@ module github.com/airdb/sls-mina
 go 1.17
 
 require (
-	github.com/airdb/sailor v0.0.0-20211024114313-502d9e6334c0
+	github.com/airdb/sailor v0.0.0-20211024160747-2ae4b0a65130
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asmcos/requests v0.0.0-20210319030608-c839e8ae4946
 	github.com/go-chi/chi/v5 v5.0.4
