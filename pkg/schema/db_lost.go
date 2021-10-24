@@ -1,16 +1,10 @@
-package store
+package schema
 
 import (
-	"log"
 	"time"
 
-	"github.com/airdb/sls-mina/pkg/schema"
 	"gorm.io/gorm"
 )
-
-type lost struct {
-	db *gorm.DB
-}
 
 type Lost struct {
 	gorm.Model
@@ -43,16 +37,4 @@ type Lost struct {
 	Category       string
 	Height         string
 	SyncStatus     int `gorm:"column:syncstatus;default:0"`
-}
-
-func newLost(ds *datastore) *lost {
-	return &lost{db: ds.db}
-}
-
-// Create creates a new talk item.
-func (d *lost) List() (items []*schema.Lost, err error) {
-	r := d.db.Limit(10).Find(&items)
-	log.Println("len: ", len(items))
-
-	return items, r.Error
 }

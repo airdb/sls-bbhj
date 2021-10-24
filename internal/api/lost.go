@@ -7,6 +7,7 @@ import (
 	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sls-mina/internal/repository"
 	"github.com/airdb/sls-mina/internal/repository/store"
+	"github.com/go-chi/render"
 )
 
 type Reply struct {
@@ -22,18 +23,28 @@ type Reply struct {
 // @Success 200 {string} response "api response"
 // @Router /lost/list [get]
 func LostList(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("welcome hello"))
-	w.WriteHeader(http.StatusOK)
+	// w.Write([]byte("welcome hello"))
 	var s Reply
 
 	mysqlStore, err := store.GetFactoryOr(dbutil.WriteDefaultDB())
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
 	s.store = mysqlStore
 
-	err = s.store.Losts().List()
+	items, err := s.store.Losts().List()
 	if err != nil {
 		log.Println(err)
+
+		return
 	}
+
+	log.Println("item", items)
+
+	render.JSON(w, r, items)
+	w.WriteHeader(http.StatusOK)
 }
 
 // LostSearch
