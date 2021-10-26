@@ -52,6 +52,7 @@ func main() {
 
 		r.Get("/wechat/check_session", api.CheckSession)
 
+		r.Get("/lost/list", api.LostList)
 		r.Get("/v1/lost/list", api.LostList)
 		r.Get("/v1/lost/search", api.LostSearch)
 
