@@ -9,3 +9,8 @@ type LostListResp struct {
 	Data    []*Lost `json:"data"`
 	Success bool    `json:"success"`
 }
+
+type LostQueryResp struct {
+	Data    *Lost `json:"data"`
+	Success bool  `json:"success"`
+}

@@ -77,3 +77,41 @@ func LostSearch(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("welcome hello"))
 	w.WriteHeader(http.StatusOK)
 }
+
+// LostQuery
+// @Summary Query lost item.
+// @Description query item by id or name
+// @Tags lost
+// @Accept json
+// @Produce json
+// @Success 200 {string} response "api response"
+// @Router /lost/query [get]
+func LostQuery(w http.ResponseWriter, r *http.Request) {
+	// w.Write([]byte("welcome hello"))
+	var s Reply
+
+	mysqlStore, err := store.GetFactoryOr(dbutil.WriteDefaultDB())
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	s.store = mysqlStore
+
+	items, err := s.store.Losts().List()
+	if err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	log.Println("item", items)
+
+	resp := schema.LostQueryResp{
+		Data:    items[0],
+		Success: true,
+	}
+
+	render.JSON(w, r, resp)
+	w.WriteHeader(http.StatusOK)
+}

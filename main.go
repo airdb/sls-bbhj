@@ -55,6 +55,7 @@ func main() {
 		r.Get("/lost/list", api.LostList)
 		r.Get("/v1/lost/list", api.LostList)
 		r.Get("/v1/lost/search", api.LostSearch)
+		r.Get("/v1/article/query", api.LostQuery)
 
 		r.Get("/v1/rescue/list", api.RescueList)
 		r.Get("/v1/rescue/search", api.RescueSearch)
