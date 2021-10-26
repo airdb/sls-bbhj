@@ -2,6 +2,11 @@ package api
 
 import (
 	"net/http"
+	"time"
+
+	"github.com/airdb/sailor"
+	"github.com/airdb/sls-mina/pkg/schema"
+	"github.com/go-chi/render"
 )
 
 // RescueList - 显示信息
@@ -13,7 +18,46 @@ import (
 // @Success 200 {string} response "api response"
 // @Router /rescue/list [get]
 func RescueList(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("welcome hello"))
+	var d = []*schema.Rescue{}
+
+	d = append(d, &schema.Rescue{
+		ID:        1,
+		Name:      "xxx 救助站123",
+		Is24Hour:  sailor.Bool(false),
+		StartedAt: time.Time{},
+		EndedAt:   time.Time{},
+		Province:  "广东",
+		City:      "深圳",
+	})
+
+	d = append(d, &schema.Rescue{
+		ID:        2,
+		Name:      "yyy 救助站123",
+		Is24Hour:  sailor.Bool(false),
+		StartedAt: time.Time{},
+		EndedAt:   time.Time{},
+		Province:  "广东",
+		City:      "深圳",
+	})
+
+	d = append(d, &schema.Rescue{
+		ID:        3,
+		Name:      "zzz 救助站123",
+		Is24Hour:  sailor.Bool(false),
+		StartedAt: time.Time{},
+		EndedAt:   time.Time{},
+		Province:  "广东",
+		City:      "深圳",
+	})
+
+	resp := schema.RescueListResp{
+		Data:    d,
+		Success: false,
+	}
+
+	// w.Write([]byte("welcome hello"))
+
+	render.JSON(w, r, resp)
 	w.WriteHeader(http.StatusOK)
 }
 
