@@ -28,6 +28,7 @@ func RescueList(w http.ResponseWriter, r *http.Request) {
 		EndedAt:   time.Time{},
 		Province:  "广东",
 		City:      "深圳",
+		District:  "南山区",
 	})
 
 	d = append(d, &schema.Rescue{
@@ -38,6 +39,7 @@ func RescueList(w http.ResponseWriter, r *http.Request) {
 		EndedAt:   time.Time{},
 		Province:  "广东",
 		City:      "深圳",
+		District:  "福田区",
 	})
 
 	d = append(d, &schema.Rescue{
@@ -48,11 +50,12 @@ func RescueList(w http.ResponseWriter, r *http.Request) {
 		EndedAt:   time.Time{},
 		Province:  "广东",
 		City:      "深圳",
+		District:  "宝安区",
 	})
 
 	resp := schema.RescueListResp{
 		Data:    d,
-		Success: false,
+		Success: true,
 	}
 
 	// w.Write([]byte("welcome hello"))

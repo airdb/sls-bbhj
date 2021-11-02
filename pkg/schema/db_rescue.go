@@ -21,5 +21,6 @@ type Rescue struct {
 	EndedAt   time.Time `json:"ended_at"`
 	Province  string    `json:"provice"`
 	City      string    `json:"city"`
+	District  string    `json:"district"`
 	Is24Hour  *bool     `json:"is_24_hour"`
 }
