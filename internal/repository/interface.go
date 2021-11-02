@@ -1,6 +1,10 @@
 package repository
 
-import "github.com/airdb/sls-mina/pkg/schema"
+import (
+	"context"
+
+	"github.com/airdb/sls-mina/pkg/schema"
+)
 
 // Factory defines the storage interface.
 type Factory interface {
@@ -10,5 +14,6 @@ type Factory interface {
 
 // TalkStore defines the talk storage interface.
 type LostStore interface {
-	List() ([]*schema.Lost, error)
+	List(ctx context.Context, opts schema.LostListReq) ([]*schema.Lost, error)
+	GetByUUID(ctx context.Context, uuid string) (*schema.Lost, error)
 }

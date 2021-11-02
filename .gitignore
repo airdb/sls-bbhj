@@ -6,3 +6,4 @@ main
 !.env.example
 .DS_Store
 __debug_bin
+TODO.md
