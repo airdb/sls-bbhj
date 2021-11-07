@@ -25,6 +25,7 @@ func (c LostController) Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", c.List)
+	r.Get("/list", c.List)
 	r.Get("/{:uuids}", c.Show)
 
 	return r
