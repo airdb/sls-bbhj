@@ -60,10 +60,10 @@ func main() {
 		r.Get("/wechat/check_session", api.CheckSession)
 
 		lostController := api.NewLostController(mysqlRepo)
-		r.Mount("/", lostController.Routes())
+		r.Mount("/v1/lost", lostController.Routes())
 
-		r.Get("/v1/rescue/list", api.RescueList)
-		r.Get("/v1/rescue/search", api.RescueSearch)
+		rescueController := api.NewRescueController(mysqlRepo)
+		r.Mount("/v1/rescue", rescueController.Routes())
 	})
 
 	// http.ListenAndServe(":3333", mux)

@@ -1,5 +1,3 @@
-SHELL = /bin/bash
-
 # load env file
 ifeq ($(shell test -e .env && echo -n yes),yes)
 include .env

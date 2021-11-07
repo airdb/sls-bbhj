@@ -24,10 +24,8 @@ func NewLostController(repo repository.Factory) *LostController {
 func (c LostController) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Route("/v1/lost", func(r chi.Router) {
-		r.Get("/", c.List)
-		r.Get("/{:uuids}", c.Show)
-	})
+	r.Get("/", c.List)
+	r.Get("/{:uuids}", c.Show)
 
 	return r
 }
