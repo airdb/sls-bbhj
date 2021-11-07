@@ -1,8 +1,9 @@
 package schema
 
 type LostListReq struct {
-	PageNo   int `form:"pageNo"`
-	PageSize int `form:"pageSize"`
+	Keyword  string `form:"keyword"`
+	PageNo   int    `form:"pageNo"`
+	PageSize int    `form:"pageSize"`
 }
 
 type LostListResp struct {
@@ -10,7 +11,7 @@ type LostListResp struct {
 	Success bool    `json:"success"`
 }
 
-type LostQueryResp struct {
+type LostGetResp struct {
 	Data    *Lost `json:"data"`
 	Success bool  `json:"success"`
 }

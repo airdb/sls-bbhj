@@ -5,28 +5,46 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sls-mina/internal/repository"
-	"github.com/airdb/sls-mina/internal/repository/store"
 	"github.com/airdb/sls-mina/pkg/schema"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
 
-type Reply struct {
-	store repository.Factory
+type LostController struct {
+	repo repository.Factory
+}
+
+func NewLostController(repo repository.Factory) *LostController {
+	return &LostController{
+		repo: repo,
+	}
+}
+
+func (c LostController) Routes() chi.Router {
+	r := chi.NewRouter()
+
+	r.Route("/v1/lost", func(r chi.Router) {
+		r.Get("/", c.List)
+		r.Get("/{:uuids}", c.Show)
+	})
+
+	return r
 }
 
 // LostList
 // @Summary List lost item.
 // @Description List item limit 10
-// @Tags lost
-// @Accept json
+// @Tags    lost
+// @Accept  json
 // @Produce json
 // @Success 200 {string} response "api response"
-// @Router /lost/list [get]
-// /mina/v1/lost/list?pageNo=1&pageSize=10
-func LostList(w http.ResponseWriter, r *http.Request) {
+// @Router  /v1/lost [get]
+// @Example /mina/v1/lost?pageNo=1&pageSize=10
+func (c LostController) List(w http.ResponseWriter, r *http.Request) {
 	req := schema.LostListReq{}
+
+	req.Keyword = r.URL.Query().Get("keyword")
 
 	pageNoStr := r.URL.Query().Get("pageNo")
 	req.PageNo, _ = strconv.Atoi(pageNoStr)
@@ -36,18 +54,7 @@ func LostList(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(req)
 
-	// w.Write([]byte("welcome hello"))
-	var s Reply
-
-	mysqlStore, err := store.GetFactoryOr(dbutil.WriteDefaultDB())
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	s.store = mysqlStore
-
-	items, err := s.store.Losts().List()
+	items, err := c.repo.Losts().List(r.Context(), req)
 	if err != nil {
 		log.Println(err)
 
@@ -61,57 +68,31 @@ func LostList(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 	}
 
+	w.WriteHeader(http.StatusOK)
 	render.JSON(w, r, resp)
-	w.WriteHeader(http.StatusOK)
 }
 
-// LostSearch
-// @Summary Search lost item.
-// @Description List item limit 10
-// @Tags lost
-// @Accept json
-// @Produce json
-// @Success 200 {string} response "api response"
-// @Router /lost/search [get]
-func LostSearch(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("welcome hello"))
-	w.WriteHeader(http.StatusOK)
-}
-
-// LostQuery
+// LostShow
 // @Summary Query lost item.
 // @Description query item by id or name
-// @Tags lost
-// @Accept json
+// @Tags    lost
+// @Accept  json
 // @Produce json
 // @Success 200 {string} response "api response"
-// @Router /lost/query [get]
-func LostQuery(w http.ResponseWriter, r *http.Request) {
-	// w.Write([]byte("welcome hello"))
-	var s Reply
-
-	mysqlStore, err := store.GetFactoryOr(dbutil.WriteDefaultDB())
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	s.store = mysqlStore
-
-	items, err := s.store.Losts().List()
+// @Router  /v1/lost/{:uuid} [get]
+func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
+	item, err := c.repo.Losts().GetByUUID(r.Context(), chi.URLParam(r, "uuid"))
 	if err != nil {
 		log.Println(err)
 
 		return
 	}
 
-	log.Println("item", items)
-
-	resp := schema.LostQueryResp{
-		Data:    items[0],
+	resp := schema.LostGetResp{
+		Data:    item,
 		Success: true,
 	}
 
-	render.JSON(w, r, resp)
 	w.WriteHeader(http.StatusOK)
+	render.JSON(w, r, resp)
 }

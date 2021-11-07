@@ -5,10 +5,12 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sailor/deployutil"
 	"github.com/airdb/sailor/faas"
 	"github.com/airdb/sls-mina/internal/api"
 	"github.com/airdb/sls-mina/internal/app"
+	"github.com/airdb/sls-mina/internal/repository/mysql"
 
 	// "github.com/airdb/wxwork-kf/pkg/cache"
 	"github.com/go-chi/chi/v5"
@@ -38,6 +40,11 @@ func main() {
 
 	app.InitApp()
 
+	mysqlRepo, err := mysql.GetFactoryOr(dbutil.WriteDefaultDB())
+	if err != nil {
+		log.Panic(err)
+	}
+
 	mux := chi.NewRouter()
 	mux.Use(middleware.Logger)
 	// mux.Use(render.SetContentType(render.ContentTypeHTML))
@@ -52,10 +59,8 @@ func main() {
 
 		r.Get("/wechat/check_session", api.CheckSession)
 
-		r.Get("/lost/list", api.LostList)
-		r.Get("/v1/lost/list", api.LostList)
-		r.Get("/v1/lost/search", api.LostSearch)
-		r.Get("/v1/article/query", api.LostQuery)
+		lostController := api.NewLostController(mysqlRepo)
+		r.Mount("/", lostController.Routes())
 
 		r.Get("/v1/rescue/list", api.RescueList)
 		r.Get("/v1/rescue/search", api.RescueSearch)
