@@ -25,6 +25,7 @@ func (c RescueController) Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", c.List)
+	r.Get("/list", c.List)
 
 	return r
 }
