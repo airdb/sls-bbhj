@@ -31,3 +31,18 @@ CREATE TABLE `tab_lost` (
   UNIQUE KEY `data_from` (`data_from`),
   KEY `idx_articles_deleted_at` (`deleted_at`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE `tab_rescue` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `phone1` varchar(255) DEFAULT NULL,
+  `phone2` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `address` (`address`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
