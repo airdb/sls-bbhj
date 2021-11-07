@@ -38,19 +38,21 @@ func (c RescueController) Routes() chi.Router {
 // @Success 200 {string} response "api response"
 // @Router /rescue [get]
 func (c RescueController) List(w http.ResponseWriter, r *http.Request) {
-	req := schema.RescueListReq{}
+	msg := schema.RescueListReq{}
 
-	req.Keyword = r.URL.Query().Get("keyword")
+	msg.Keyword = r.URL.Query().Get("keyword")
 
 	pageNoStr := r.URL.Query().Get("pageNo")
-	req.PageNo, _ = strconv.Atoi(pageNoStr)
+	msg.PageNo, _ = strconv.Atoi(pageNoStr)
 
 	pageSizeStr := r.URL.Query().Get("pageSize")
-	req.PageSize, _ = strconv.Atoi(pageSizeStr)
+	msg.PageSize, _ = strconv.Atoi(pageSizeStr)
 
-	log.Println(req)
+	msg.Valadate()
 
-	items, err := c.repo.Rescues().List(r.Context(), req)
+	log.Println(msg)
+
+	items, err := c.repo.Rescues().List(r.Context(), msg)
 	if err != nil {
 		log.Println(err)
 

@@ -27,6 +27,15 @@ type RescueListReq struct {
 	PageSize int    `form:"pageSize"`
 }
 
+func (m *RescueListReq) Valadate() {
+	if m.PageNo == 0 {
+		m.PageNo = 1
+	}
+	if m.PageSize == 0 {
+		m.PageSize = 20
+	}
+}
+
 type RescueListResp struct {
 	Data    []*RescueItem `json:"data"`
 	Success bool          `json:"success"`
