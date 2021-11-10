@@ -21,11 +21,11 @@ import (
 
 // @title Airdb Serverlesss Example API
 // @version 0.0.1
-// @description This is a sample server Petstore server.
+// @description 宝贝回家小程序后端, 遵循 restful api 规范.
 // @termsOfService https://airdb.github.io/terms.html
 
-// @contact.name API Support
-// @contact.url https://work.weixin.qq.com/kfid/kfc5fdb2e0a1f297753
+// @contact.name APIs Support
+// @contact.url https://work.weixin.qq.com/kfid/kfc02343d9ba414880a?sence=swagger
 // @contact.email info@airdb.com
 
 // @license.name Apache 2.0
@@ -34,7 +34,7 @@ import (
 // @info.x-logo.url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host service-iw6drlfr-1251018873.sh.apigw.tencentcs.com
-// @BasePath /wxkf
+// @BasePath /test/
 func main() {
 	log.Println("start serverless:", deployutil.GetDeployStage(), os.Environ())
 

@@ -37,7 +37,8 @@ func (c LostController) Routes() chi.Router {
 // @Tags    lost
 // @Accept  json
 // @Produce json
-// @Success 200 {string} response "api response"
+// @param page query int false "page"
+// @Success 200 {object} schema.LostListResp
 // @Router  /v1/lost [get]
 // @Example /mina/v1/lost?pageNo=1&pageSize=10
 func (c LostController) List(w http.ResponseWriter, r *http.Request) {
