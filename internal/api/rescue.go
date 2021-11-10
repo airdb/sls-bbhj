@@ -36,7 +36,7 @@ func (c RescueController) Routes() chi.Router {
 // @Tags resue
 // @Accept json
 // @Produce json
-// @Success 200 {string} response "api response"
+// @Success 200 {object} schema.RescueListResp
 // @Router /rescue [get]
 func (c RescueController) List(w http.ResponseWriter, r *http.Request) {
 	msg := schema.RescueListReq{}

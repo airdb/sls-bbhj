@@ -22,7 +22,7 @@ build:
 	GOOS=linux go build $(LDFLAGS) -o main main.go
 
 swag:
-	swag init --generalInfo main.go
+	swag init --parseDependency --parseInternal --generalInfo main.go
 
 dev: swag
 	env=dev go run $(LDFLAGS) main.go
