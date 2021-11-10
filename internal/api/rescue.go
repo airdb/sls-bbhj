@@ -1,13 +1,34 @@
 package api
 
 import (
+	"log"
 	"net/http"
-	"time"
+	"strconv"
 
-	"github.com/airdb/sailor"
+	"github.com/airdb/sls-mina/internal/repository"
 	"github.com/airdb/sls-mina/pkg/schema"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
+
+type RescueController struct {
+	repo repository.Factory
+}
+
+func NewRescueController(repo repository.Factory) *RescueController {
+	return &RescueController{
+		repo: repo,
+	}
+}
+
+func (c RescueController) Routes() chi.Router {
+	r := chi.NewRouter()
+
+	r.Get("/", c.List)
+	r.Get("/list", c.List)
+
+	return r
+}
 
 // RescueList - 显示信息
 // @Summary List rescue item.
@@ -16,63 +37,51 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200 {string} response "api response"
-// @Router /rescue/list [get]
-func RescueList(w http.ResponseWriter, r *http.Request) {
-	var d = []*schema.Rescue{}
+// @Router /rescue [get]
+func (c RescueController) List(w http.ResponseWriter, r *http.Request) {
+	msg := schema.RescueListReq{}
 
-	d = append(d, &schema.Rescue{
-		ID:        1,
-		Name:      "xxx 救助站123",
-		Is24Hour:  sailor.Bool(false),
-		StartedAt: time.Time{},
-		EndedAt:   time.Time{},
-		Province:  "广东",
-		City:      "深圳",
-		District:  "南山区",
-	})
+	msg.Keyword = r.URL.Query().Get("keyword")
 
-	d = append(d, &schema.Rescue{
-		ID:        2,
-		Name:      "yyy 救助站123",
-		Is24Hour:  sailor.Bool(false),
-		StartedAt: time.Time{},
-		EndedAt:   time.Time{},
-		Province:  "广东",
-		City:      "深圳",
-		District:  "福田区",
-	})
+	pageNoStr := r.URL.Query().Get("pageNo")
+	msg.PageNo, _ = strconv.Atoi(pageNoStr)
 
-	d = append(d, &schema.Rescue{
-		ID:        3,
-		Name:      "zzz 救助站123",
-		Is24Hour:  sailor.Bool(false),
-		StartedAt: time.Time{},
-		EndedAt:   time.Time{},
-		Province:  "广东",
-		City:      "深圳",
-		District:  "宝安区",
-	})
+	pageSizeStr := r.URL.Query().Get("pageSize")
+	msg.PageSize, _ = strconv.Atoi(pageSizeStr)
+
+	msg.Valadate()
+
+	log.Println(msg)
+
+	items, err := c.repo.Rescues().List(r.Context(), msg)
+	if err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	log.Println("item len: ", len(items))
+
+	data := []*schema.RescueItem{}
+
+	for _, item := range items {
+		data = append(data, &schema.RescueItem{
+			ID:        item.ID,
+			Name:      item.Name,
+			Is24Hour:  item.Is24Hour,
+			StartedAt: item.StartedAt,
+			EndedAt:   item.EndedAt,
+			Province:  item.Province,
+			City:      item.City,
+			District:  item.District,
+		})
+	}
 
 	resp := schema.RescueListResp{
-		Data:    d,
+		Data:    data,
 		Success: true,
 	}
 
-	// w.Write([]byte("welcome hello"))
-
+	w.WriteHeader(http.StatusOK)
 	render.JSON(w, r, resp)
-	w.WriteHeader(http.StatusOK)
-}
-
-// RescueSearch
-// @Summary search rescue item.
-// @Description Search rescue by id or name.
-// @Tags resue
-// @Accept json
-// @Produce json
-// @Success 200 {string} response "api response"
-// @Router /rescue/RescueSearch [get]
-func RescueSearch(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("welcome hello"))
-	w.WriteHeader(http.StatusOK)
 }
