@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/airdb/sls-mina/internal/repository"
+	"github.com/airdb/sls-bbhj/internal/repository"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/airdb/sls-mina/internal/repository"
-	"github.com/airdb/sls-mina/pkg/schema"
+	"github.com/airdb/sls-bbhj/internal/repository"
+	"github.com/airdb/sls-bbhj/pkg/schema"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )

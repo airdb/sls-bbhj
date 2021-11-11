@@ -8,11 +8,10 @@ import (
 	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sailor/deployutil"
 	"github.com/airdb/sailor/faas"
-	"github.com/airdb/sls-mina/internal/api"
-	"github.com/airdb/sls-mina/internal/app"
-	"github.com/airdb/sls-mina/internal/repository/mysql"
+	"github.com/airdb/sls-bbhj/internal/api"
+	"github.com/airdb/sls-bbhj/internal/app"
+	"github.com/airdb/sls-bbhj/internal/repository/mysql"
 
-	// "github.com/airdb/wxwork-kf/pkg/cache"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 

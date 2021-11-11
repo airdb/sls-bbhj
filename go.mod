@@ -1,4 +1,4 @@
-module github.com/airdb/sls-mina
+module github.com/airdb/sls-bbhj
 
 go 1.17
 

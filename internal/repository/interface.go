@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/airdb/sls-mina/pkg/schema"
+	"github.com/airdb/sls-bbhj/pkg/schema"
 )
 
 // Factory defines the storage interface.

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/airdb/sls-mina/pkg/schema"
+	"github.com/airdb/sls-bbhj/pkg/schema"
 	"gorm.io/gorm"
 )
 
