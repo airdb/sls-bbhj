@@ -30,7 +30,7 @@ func (r *lost) List(ctx context.Context, opts schema.LostListReq) ([]*schema.Los
 		Order("id desc")
 
 	if len(opts.Keyword) > 0 {
-		tx = tx.Where("name like ?", "%"+opts.Keyword+"%")
+		tx = tx.Where("nickname like ?", "%"+opts.Keyword+"%")
 	}
 
 	d := tx.Find(&items).

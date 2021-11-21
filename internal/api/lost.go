@@ -42,26 +42,28 @@ func (c LostController) Routes() chi.Router {
 // @Router  /v1/lost [get]
 // @Example /mina/v1/lost?pageNo=1&pageSize=10
 func (c LostController) List(w http.ResponseWriter, r *http.Request) {
-	req := schema.LostListReq{}
+	msg := schema.LostListReq{}
 
-	req.Keyword = r.URL.Query().Get("keyword")
+	msg.Keyword = r.URL.Query().Get("keyword")
 
 	pageNoStr := r.URL.Query().Get("pageNo")
-	req.PageNo, _ = strconv.Atoi(pageNoStr)
+	msg.PageNo, _ = strconv.Atoi(pageNoStr)
 
 	pageSizeStr := r.URL.Query().Get("pageSize")
-	req.PageSize, _ = strconv.Atoi(pageSizeStr)
+	msg.PageSize, _ = strconv.Atoi(pageSizeStr)
 
-	log.Println(req)
+	msg.Valadate()
 
-	items, err := c.repo.Losts().List(r.Context(), req)
+	log.Println(msg)
+
+	items, err := c.repo.Losts().List(r.Context(), msg)
 	if err != nil {
 		log.Println(err)
 
 		return
 	}
 
-	log.Println("item", items)
+	log.Println("item len: ", len(items))
 
 	resp := schema.LostListResp{
 		Data:    items,
