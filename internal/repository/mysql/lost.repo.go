@@ -44,6 +44,21 @@ func (r *lost) List(ctx context.Context, opts schema.LostListReq) ([]*schema.Los
 }
 
 // Get gets a new talk item.
+func (r *lost) GetByID(ctx context.Context, id int) (*schema.Lost, error) {
+	item := &schema.Lost{}
+	err := r.db.Where("id = ?", id).First(&item).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("record not exist")
+		}
+
+		return nil, errors.New("can not found record")
+	}
+
+	return item, nil
+}
+
+// Get gets a new talk item.
 func (r *lost) GetByUUID(ctx context.Context, uuid string) (*schema.Lost, error) {
 	item := &schema.Lost{}
 	err := r.db.Where("uuid = ?", uuid).First(&item).Error

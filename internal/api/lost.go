@@ -25,8 +25,7 @@ func (c LostController) Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", c.List)
-	r.Get("/list", c.List)
-	r.Get("/{:uuids}", c.Show)
+	r.Get("/{id}", c.Show)
 
 	return r
 }
@@ -81,9 +80,16 @@ func (c LostController) List(w http.ResponseWriter, r *http.Request) {
 // @Accept  json
 // @Produce json
 // @Success 200 {string} response "api response"
-// @Router  /v1/lost/{:uuid} [get]
+// @Router  /v1/lost/{id} [get]
 func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
-	item, err := c.repo.Losts().GetByUUID(r.Context(), chi.URLParam(r, "uuid"))
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	item, err := c.repo.Losts().GetByID(r.Context(), id)
 	if err != nil {
 		log.Println(err)
 
