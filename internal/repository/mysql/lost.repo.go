@@ -33,6 +33,10 @@ func (r *lost) List(ctx context.Context, opts schema.LostListRequest) ([]*schema
 		tx = tx.Where("nickname like ?", "%"+opts.Keyword+"%")
 	}
 
+	if len(opts.Category) > 0 {
+		tx = tx.Where("category = ?", opts.Category)
+	}
+
 	d := tx.Find(&items).
 		Offset(-1).
 		Limit(-1).

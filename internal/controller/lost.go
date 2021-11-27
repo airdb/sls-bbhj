@@ -1,10 +1,11 @@
-package api
+package controller
 
 import (
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/airdb/sls-bbhj/internal/aggregate"
 	"github.com/airdb/sls-bbhj/internal/repository"
 	"github.com/airdb/sls-bbhj/pkg/schema"
 	"github.com/go-chi/chi/v5"
@@ -12,12 +13,14 @@ import (
 )
 
 type LostController struct {
+	aggr aggregate.Aggregate
 	repo repository.Factory
 }
 
 func NewLostController(repo repository.Factory) *LostController {
 	return &LostController{
 		repo: repo,
+		aggr: aggregate.New(repo),
 	}
 }
 
@@ -43,19 +46,20 @@ func (c LostController) Routes() chi.Router {
 func (c LostController) List(w http.ResponseWriter, r *http.Request) {
 	msg := schema.LostListRequest{}
 
-	msg.Keyword = r.URL.Query().Get("keyword")
-
 	pageNoStr := r.URL.Query().Get("pageNo")
 	msg.PageNo, _ = strconv.Atoi(pageNoStr)
 
 	pageSizeStr := r.URL.Query().Get("pageSize")
 	msg.PageSize, _ = strconv.Atoi(pageSizeStr)
 
+	msg.Keyword = r.URL.Query().Get("keyword")
+	msg.Category = r.URL.Query().Get("category")
+
 	msg.Valadate()
 
 	log.Println(msg)
 
-	items, err := c.repo.Losts().List(r.Context(), msg)
+	items, err := c.aggr.Losts().List(r.Context(), msg)
 	if err != nil {
 		log.Println(err)
 

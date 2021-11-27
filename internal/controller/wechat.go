@@ -1,4 +1,4 @@
-package api
+package controller
 
 import (
 	"net/http"
@@ -11,7 +11,7 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200 {string} response "api response"
-// @Router /lost/list [get]
+// @Router /wechat/check_session [get]
 func CheckSession(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("welcome hello"))
 	w.WriteHeader(http.StatusOK)
