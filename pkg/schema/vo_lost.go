@@ -2,7 +2,8 @@ package schema
 
 type LostListRequest struct {
 	Pagination
-	Keyword string `form:"keyword"`
+	Keyword  string `form:"keyword"`
+	Category string `form:"category"`
 }
 
 func (m *LostListRequest) Valadate() error {

@@ -51,3 +51,7 @@ func (ds *datastore) Losts() repository.LostStore {
 func (ds *datastore) Rescues() repository.RescueStore {
 	return newRescue(ds)
 }
+
+func (ds *datastore) Categories() repository.CategoryStore {
+	return newCategory(ds)
+}

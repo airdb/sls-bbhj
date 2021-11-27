@@ -9,8 +9,8 @@ import (
 	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sailor/deployutil"
 	"github.com/airdb/sailor/faas"
-	"github.com/airdb/sls-bbhj/internal/api"
 	"github.com/airdb/sls-bbhj/internal/app"
+	"github.com/airdb/sls-bbhj/internal/controller"
 	"github.com/airdb/sls-bbhj/internal/repository/mysql"
 
 	"github.com/go-chi/chi/v5"
@@ -58,12 +58,15 @@ func main() {
 	mux.Route(p, func(r chi.Router) {
 		r.Get("/version", faas.HandleVersion)
 
-		r.Get("/wechat/check_session", api.CheckSession)
+		r.Get("/wechat/check_session", controller.CheckSession)
 
-		lostController := api.NewLostController(mysqlRepo)
+		categoryController := controller.NewCategoryController(mysqlRepo)
+		r.Mount("/v1/category", categoryController.Routes())
+
+		lostController := controller.NewLostController(mysqlRepo)
 		r.Mount("/v1/lost", lostController.Routes())
 
-		rescueController := api.NewRescueController(mysqlRepo)
+		rescueController := controller.NewRescueController(mysqlRepo)
 		r.Mount("/v1/rescue", rescueController.Routes())
 	})
 

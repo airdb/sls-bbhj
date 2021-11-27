@@ -1,4 +1,4 @@
-package api
+package controller
 
 import (
 	"log"
@@ -37,7 +37,7 @@ func (c RescueController) Routes() chi.Router {
 // @Accept json
 // @Produce json
 // @Success 200 {object} schema.RescueListResponse
-// @Router /rescue [get]
+// @Router /v1/rescue [get]
 func (c RescueController) List(w http.ResponseWriter, r *http.Request) {
 	msg := schema.RescueListRequest{}
 

@@ -8,6 +8,7 @@ import (
 
 // Factory defines the storage interface.
 type Factory interface {
+	Categories() CategoryStore
 	Losts() LostStore
 	Rescues() RescueStore
 	Close() error
@@ -20,7 +21,13 @@ type LostStore interface {
 	GetByUUID(ctx context.Context, uuid string) (*schema.Lost, error)
 }
 
-// RescueStore defines the talk storage interface.
+// RescueStore defines the rescue storage interface.
 type RescueStore interface {
 	List(ctx context.Context, opts schema.RescueListRequest) ([]*schema.Rescue, error)
+}
+
+// CategoryStore defines the lost category interface.
+type CategoryStore interface {
+	List(ctx context.Context, opts schema.CategoryListRequest) ([]*schema.Category, error)
+	GetById(ctx context.Context, id int) (*schema.Category, error)
 }
