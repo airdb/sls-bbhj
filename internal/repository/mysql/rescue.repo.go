@@ -18,7 +18,7 @@ func newRescue(ds *datastore) *resuce {
 }
 
 // Create creates a new talk item.
-func (r *resuce) List(ctx context.Context, opts schema.RescueListReq) ([]*schema.Rescue, error) {
+func (r *resuce) List(ctx context.Context, opts schema.RescueListRequest) ([]*schema.Rescue, error) {
 	var (
 		items []*schema.Rescue
 		cnt   int64

@@ -37,11 +37,11 @@ func (c LostController) Routes() chi.Router {
 // @Accept  json
 // @Produce json
 // @param page query int false "page"
-// @Success 200 {object} schema.LostListResp
+// @Success 200 {object} schema.LostListResponse
 // @Router  /v1/lost [get]
 // @Example /mina/v1/lost?pageNo=1&pageSize=10
 func (c LostController) List(w http.ResponseWriter, r *http.Request) {
-	msg := schema.LostListReq{}
+	msg := schema.LostListRequest{}
 
 	msg.Keyword = r.URL.Query().Get("keyword")
 
@@ -64,12 +64,11 @@ func (c LostController) List(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("item len: ", len(items))
 
-	resp := schema.LostListResp{
+	resp := schema.LostListResponse{
 		Data:    items,
 		Success: true,
 	}
 
-	w.WriteHeader(http.StatusOK)
 	render.JSON(w, r, resp)
 }
 
@@ -96,11 +95,10 @@ func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := schema.LostGetResp{
+	resp := schema.LostGetResponse{
 		Data:    item,
 		Success: true,
 	}
 
-	w.WriteHeader(http.StatusOK)
 	render.JSON(w, r, resp)
 }

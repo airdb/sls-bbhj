@@ -18,7 +18,7 @@ func newLost(ds *datastore) *lost {
 }
 
 // Create creates a new talk item.
-func (r *lost) List(ctx context.Context, opts schema.LostListReq) ([]*schema.Lost, error) {
+func (r *lost) List(ctx context.Context, opts schema.LostListRequest) ([]*schema.Lost, error) {
 	var (
 		items []*schema.Lost
 		cnt   int64

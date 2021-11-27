@@ -1,26 +1,24 @@
 package schema
 
-type LostListReq struct {
-	Keyword  string `form:"keyword"`
-	PageNo   int    `form:"pageNo"`
-	PageSize int    `form:"pageSize"`
+type LostListRequest struct {
+	Pagination
+	Keyword string `form:"keyword"`
 }
 
-func (m *LostListReq) Valadate() {
-	if m.PageNo == 0 {
-		m.PageNo = 1
+func (m *LostListRequest) Valadate() error {
+	if err := m.Pagination.Valadate(); err != nil {
+		return err
 	}
-	if m.PageSize == 0 || m.PageSize > 100 {
-		m.PageSize = 20
-	}
+
+	return nil
 }
 
-type LostListResp struct {
+type LostListResponse struct {
 	Data    []*Lost `json:"data"`
 	Success bool    `json:"success"`
 }
 
-type LostGetResp struct {
+type LostGetResponse struct {
 	Data    *Lost `json:"data"`
 	Success bool  `json:"success"`
 }

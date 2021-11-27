@@ -36,10 +36,10 @@ func (c RescueController) Routes() chi.Router {
 // @Tags resue
 // @Accept json
 // @Produce json
-// @Success 200 {object} schema.RescueListResp
+// @Success 200 {object} schema.RescueListResponse
 // @Router /rescue [get]
 func (c RescueController) List(w http.ResponseWriter, r *http.Request) {
-	msg := schema.RescueListReq{}
+	msg := schema.RescueListRequest{}
 
 	msg.Keyword = r.URL.Query().Get("keyword")
 
@@ -77,11 +77,10 @@ func (c RescueController) List(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	resp := schema.RescueListResp{
+	resp := schema.RescueListResponse{
 		Data:    data,
 		Success: true,
 	}
 
-	w.WriteHeader(http.StatusOK)
 	render.JSON(w, r, resp)
 }
