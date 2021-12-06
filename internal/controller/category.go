@@ -32,11 +32,11 @@ func (c CategoryController) Routes() chi.Router {
 // CategoryList - 查询分类
 // @Summary List lost's category item.
 // @Description List lost's category limit 10
-// @Tags category
-// @Accept json
+// @Tags    category
+// @Accept  json
 // @Produce json
 // @Success 200 {object} schema.CategoryListResponse
-// @Router /v1/category [get]
+// @Router  /v1/category [get]
 func (c CategoryController) List(w http.ResponseWriter, r *http.Request) {
 	msg := schema.CategoryListRequest{}
 

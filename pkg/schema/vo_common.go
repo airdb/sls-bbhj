@@ -15,3 +15,8 @@ func (m *Pagination) Valadate() error {
 
 	return nil
 }
+
+type Response struct {
+	Data    interface{} `json:"data"`
+	Success bool        `json:"success"`
+}

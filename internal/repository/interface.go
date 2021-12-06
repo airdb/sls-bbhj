@@ -17,8 +17,11 @@ type Factory interface {
 // LostStore defines the lost storage interface.
 type LostStore interface {
 	List(ctx context.Context, opts schema.LostListRequest) ([]*schema.Lost, error)
-	GetByID(ctx context.Context, id int) (*schema.Lost, error)
+	GetByID(ctx context.Context, id uint) (*schema.Lost, error)
 	GetByUUID(ctx context.Context, uuid string) (*schema.Lost, error)
+	GetStatByID(ctx context.Context, id uint) (*schema.LostStat, error)
+	IncreaseShare(ctx context.Context, id uint) error
+	IncreaseShow(ctx context.Context, id uint) error
 }
 
 // RescueStore defines the rescue storage interface.

@@ -42,3 +42,16 @@ type Lost struct {
 	Height         string    `json:"height"`
 	SyncStatus     int       `gorm:"column:syncstatus;default:0" json:"sync_status"`
 }
+
+type LostStat struct {
+	ID        uint           `gorm:"primarykey" json:"id"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+
+	LostID uint
+	Babyid string `json:"babyid"`
+
+	ShareCount uint // 累计转发助力
+	ShowCount  uint // 累计曝光助力
+}
