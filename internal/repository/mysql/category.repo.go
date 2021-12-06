@@ -9,18 +9,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type resuce struct {
+type category struct {
 	db *gorm.DB
 }
 
-func newRescue(ds *datastore) *resuce {
-	return &resuce{db: ds.db}
+func newCategory(ds *datastore) *category {
+	return &category{db: ds.db}
 }
 
 // Create creates a new talk item.
-func (r *resuce) List(ctx context.Context, opts schema.RescueListRequest) ([]*schema.Rescue, error) {
+func (r *category) List(ctx context.Context, opts schema.CategoryListRequest) ([]*schema.Category, error) {
 	var (
-		items []*schema.Rescue
+		items []*schema.Category
 		cnt   int64
 	)
 
@@ -50,9 +50,9 @@ func (r *resuce) List(ctx context.Context, opts schema.RescueListRequest) ([]*sc
 }
 
 // Get gets a new talk item.
-func (r *resuce) GetByUUID(ctx context.Context, uuid string) (*schema.Rescue, error) {
-	item := &schema.Rescue{}
-	err := r.db.Where("uuid = ?", uuid).First(&item).Error
+func (r *category) GetById(ctx context.Context, id int) (*schema.Category, error) {
+	item := &schema.Category{}
+	err := r.db.Where("id = ?", id).First(&item).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("record not exist")

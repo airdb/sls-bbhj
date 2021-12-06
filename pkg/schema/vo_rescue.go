@@ -21,22 +21,20 @@ type RescueItem struct {
 	Is24Hour  *bool     `json:"is_24_hour"`
 }
 
-type RescueListReq struct {
-	Keyword  string `form:"keyword"`
-	PageNo   int    `form:"pageNo"`
-	PageSize int    `form:"pageSize"`
+type RescueListRequest struct {
+	Pagination
+	Keyword string `form:"keyword"`
 }
 
-func (m *RescueListReq) Valadate() {
-	if m.PageNo == 0 {
-		m.PageNo = 1
+func (m *RescueListRequest) Valadate() error {
+	if err := m.Pagination.Valadate(); err != nil {
+		return err
 	}
-	if m.PageSize == 0 || m.PageSize > 100 {
-		m.PageSize = 20
-	}
+
+	return nil
 }
 
-type RescueListResp struct {
+type RescueListResponse struct {
 	Data    []*RescueItem `json:"data"`
 	Success bool          `json:"success"`
 }

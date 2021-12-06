@@ -1,10 +1,11 @@
-package api
+package controller
 
 import (
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/airdb/sls-bbhj/internal/aggregate"
 	"github.com/airdb/sls-bbhj/internal/repository"
 	"github.com/airdb/sls-bbhj/pkg/schema"
 	"github.com/go-chi/chi/v5"
@@ -12,12 +13,14 @@ import (
 )
 
 type LostController struct {
+	aggr aggregate.Aggregate
 	repo repository.Factory
 }
 
 func NewLostController(repo repository.Factory) *LostController {
 	return &LostController{
 		repo: repo,
+		aggr: aggregate.New(repo),
 	}
 }
 
@@ -37,13 +40,11 @@ func (c LostController) Routes() chi.Router {
 // @Accept  json
 // @Produce json
 // @param page query int false "page"
-// @Success 200 {object} schema.LostListResp
+// @Success 200 {object} schema.LostListResponse
 // @Router  /v1/lost [get]
 // @Example /mina/v1/lost?pageNo=1&pageSize=10
 func (c LostController) List(w http.ResponseWriter, r *http.Request) {
-	msg := schema.LostListReq{}
-
-	msg.Keyword = r.URL.Query().Get("keyword")
+	msg := schema.LostListRequest{}
 
 	pageNoStr := r.URL.Query().Get("pageNo")
 	msg.PageNo, _ = strconv.Atoi(pageNoStr)
@@ -51,11 +52,14 @@ func (c LostController) List(w http.ResponseWriter, r *http.Request) {
 	pageSizeStr := r.URL.Query().Get("pageSize")
 	msg.PageSize, _ = strconv.Atoi(pageSizeStr)
 
+	msg.Keyword = r.URL.Query().Get("keyword")
+	msg.Category = r.URL.Query().Get("category")
+
 	msg.Valadate()
 
 	log.Println(msg)
 
-	items, err := c.repo.Losts().List(r.Context(), msg)
+	items, err := c.aggr.Losts().List(r.Context(), msg)
 	if err != nil {
 		log.Println(err)
 
@@ -64,12 +68,11 @@ func (c LostController) List(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("item len: ", len(items))
 
-	resp := schema.LostListResp{
+	resp := schema.LostListResponse{
 		Data:    items,
 		Success: true,
 	}
 
-	w.WriteHeader(http.StatusOK)
 	render.JSON(w, r, resp)
 }
 
@@ -96,11 +99,10 @@ func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := schema.LostGetResp{
+	resp := schema.LostGetResponse{
 		Data:    item,
 		Success: true,
 	}
 
-	w.WriteHeader(http.StatusOK)
 	render.JSON(w, r, resp)
 }

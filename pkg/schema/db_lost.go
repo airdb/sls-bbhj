@@ -7,10 +7,6 @@ import (
 )
 
 type Lost struct {
-	// gorm.Model
-	// ID        string `gorm:"primary_key"`
-	//  Timestamp int64
-	// CreatedAt    time.Time `sql:"DEFAULT:current_timestamp"`
 	ID        uint           `gorm:"primarykey" json:"id"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -19,12 +15,15 @@ type Lost struct {
 	UUID      string `json:"uuid"`
 	AvatarURL string `json:"avatar_url"`
 	Nickname  string `json:"nickname"`
-	// 0: unknown,  1: male   2: female
-	Gender          uint      `json:"gender"`
-	Title           string    `json:"title"`
-	Subject         string    `json:"subject"`
-	Characters      string    `json:"characters"`
-	Details         string    `json:"details"`
+	// 性别 0: unknown,  1: male   2: female
+	Gender uint `json:"gender"`
+	// 标题
+	Title string `json:"title"`
+	// 子标题
+	Subject    string `json:"subject"`
+	Characters string `json:"characters"`
+	Details    string `json:"details"`
+	// 数据链接
 	DataFrom        string    `json:"data_from"`
 	BirthedProvince string    `json:"birthed_province"`
 	BirthedCity     string    `json:"birthed_city"`
