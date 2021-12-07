@@ -35,8 +35,8 @@ func (c LostController) Routes() chi.Router {
 }
 
 // LostList
-// @Summary List lost item.
-// @Description List item limit 10
+// @Summary 失踪信息 列表。
+// @Description 失踪信息 列表 默认单页大小为10。
 // @Tags    lost
 // @Accept  json
 // @Produce json
@@ -81,8 +81,8 @@ func (c LostController) List(w http.ResponseWriter, r *http.Request) {
 }
 
 // LostShow
-// @Summary Query lost item.
-// @Description query item by id or name
+// @Summary 失踪信息 详情。
+// @Description 失踪信息 详情。lost_id为对应列表页中的id.
 // @Tags    lost
 // @Accept  json
 // @Produce json
@@ -117,8 +117,8 @@ func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
 }
 
 // [TODO] LostShareCallback
-// @Summary 分享后回传
-// @Description 分享后回传，通过缓存+IP+Key来去重.
+// @Summary 失踪信息 分享后回传
+// @Description 分享后回传，通过缓存+IP+Key来去重。share_key为详情页中 wx_more 里的 share_key.
 // @Tags    lost
 // @Accept  json
 // @Produce json

@@ -52,7 +52,7 @@ func (u *lostAggr) List(ctx context.Context, opts schema.LostListRequest) ([]*sc
 			Name:         v.Nickname,
 			Babyid:       v.Babyid,
 			Introduction: v.Subject,
-			MissAt:       v.MissedAt.Format("2006-01-02 15:04:05"),
+			MissAt:       v.MissedAt.Format(defaultTimeFormat),
 			MissAddr:     v.MissedAddress,
 		}
 	}
@@ -98,13 +98,11 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 				return "未知"
 			}
 		}(),
-		BirthedAt: item.BirthedAt.Format("2006-01-02 15:04:05"),
-		Carousel: []string{
-			item.AvatarURL,
-		},
+		BirthedAt: item.BirthedAt.Format(defaultTimeFormat),
+		Carousel:  []schema.CarouselItem{},
 
 		// 失踪信息
-		MissAt:     item.MissedAt.Format("2006-01-02 15:04:05"),
+		MissAt:     item.MissedAt.Format(defaultTimeFormat),
 		MissAddr:   item.MissedAddress,
 		MissHeight: item.Height,
 		Character:  item.Characters,

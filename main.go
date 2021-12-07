@@ -37,7 +37,9 @@ const project = "mina"
 // @info.x-logo.url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host service-iw6drlfr-1251018873.sh.apigw.tencentcs.com
-// @BasePath /test/
+// @BasePath /test/mina
+// @schemes https
+
 func main() {
 	log.Println("start serverless:", deployutil.GetDeployStage(), os.Environ())
 

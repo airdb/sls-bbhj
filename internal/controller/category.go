@@ -30,8 +30,8 @@ func (c CategoryController) Routes() chi.Router {
 }
 
 // CategoryList - 查询分类
-// @Summary List lost's category item.
-// @Description List lost's category limit 10
+// @Summary 失踪信息 分类。
+// @Description List category's category limit 10
 // @Tags    category
 // @Accept  json
 // @Produce json
