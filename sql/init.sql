@@ -57,6 +57,6 @@ CREATE TABLE `tab_lost_stat` (
   `share_count` int(10) unsigned NOT NULL DEFAULT 0,
   `show_count` int(10) unsigned NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `lost_id` (`uniq_lost`),
+  UNIQUE KEY `uniq_lost` (`lost_id`),
   KEY `idx_deleted_at` (`deleted_at`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
