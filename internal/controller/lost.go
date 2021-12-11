@@ -4,10 +4,11 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/airdb/sls-bbhj/internal/aggregate"
 	"github.com/airdb/sls-bbhj/internal/repository"
-	"github.com/airdb/sls-bbhj/pkg/cache"
 	"github.com/airdb/sls-bbhj/pkg/schema"
 	"github.com/airdb/sls-bbhj/pkg/util"
 	"github.com/go-chi/chi/v5"
@@ -130,8 +131,7 @@ func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
 // @Router  /v1/lost/{lost_id}/share/{share_key}/callback [get]
 func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
 	var (
-		redisCli = cache.NewRedis()
-		resp     = schema.LostGetResponse{
+		resp = schema.LostGetResponse{
 			Success: true,
 		}
 		shareKey string
@@ -157,7 +157,7 @@ func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shareKey += util.RemoteIp(r)
+	shareKey = strings.Join([]string{shareKey, util.RemoteIp(r)}, ":")
 
 	if _, err = c.repo.Losts().GetByID(r.Context(), uint(id)); err != nil {
 		log.Println(err)
@@ -168,7 +168,7 @@ func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	shareKeyRedisValue, err := redisCli.Get(shareKey)
+	shareKeyRedisValue, err := c.aggr.Redis().Get(shareKey)
 	if err != nil {
 		log.Println(err)
 
@@ -199,7 +199,7 @@ func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
 
 	shareCount++
 
-	if err = redisCli.Set(shareKey, strconv.Itoa(shareCount), 0); err != nil {
+	if err = c.aggr.Redis().Set(shareKey, strconv.Itoa(shareCount), time.Second*86400); err != nil {
 		log.Println(err)
 
 		resp.Success = false
