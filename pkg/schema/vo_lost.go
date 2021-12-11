@@ -3,8 +3,8 @@ package schema
 // LostListRequest 失踪信息 列表请求
 type LostListRequest struct {
 	Pagination
-	Keyword  string `form:"keyword"`
-	Category string `form:"category"`
+	Keyword  string `form:"keyword"`  // 查询关键字
+	Category string `form:"category"` // 分类ID
 }
 
 func (m *LostListRequest) Valadate() error {

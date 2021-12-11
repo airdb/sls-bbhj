@@ -17,7 +17,7 @@ func newRescue(ds *datastore) *resuce {
 	return &resuce{db: ds.db}
 }
 
-// Create creates a new talk item.
+// Count creates a new talk item.
 func (r *resuce) List(ctx context.Context, opts schema.RescueListRequest) ([]*schema.Rescue, error) {
 	var (
 		items []*schema.Rescue
@@ -47,6 +47,23 @@ func (r *resuce) List(ctx context.Context, opts schema.RescueListRequest) ([]*sc
 	log.Println("len: ", len(items))
 
 	return items, d.Error
+}
+
+// Count creates a new talk item.
+func (r *resuce) Count(ctx context.Context) (int64, error) {
+	var (
+		items []*schema.Rescue
+		cnt   int64
+	)
+
+	tx := r.db.Order("id desc")
+
+	d := tx.Model(&schema.Rescue{}).
+		Count(&cnt)
+
+	log.Println("len: ", len(items))
+
+	return cnt, d.Error
 }
 
 // Get gets a new talk item.

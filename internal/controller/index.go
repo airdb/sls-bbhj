@@ -36,7 +36,7 @@ func (c IndexController) Routes() chi.Router {
 // @Tags    index
 // @Accept  json
 // @Produce json
-// @Success 200 {object} schema.Response
+// @Success 200 {object} schema.Response{data=[]schema.CarouselItem}
 // @Router  /v1/index/banner [get]
 func (c IndexController) Banner(w http.ResponseWriter, r *http.Request) {
 	resp := schema.Response{

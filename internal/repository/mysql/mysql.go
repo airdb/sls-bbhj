@@ -44,6 +44,10 @@ func (ds *datastore) Close() error {
 	return db.Close()
 }
 
+func (ds *datastore) Categories() repository.CategoryStore {
+	return newCategory(ds)
+}
+
 func (ds *datastore) Losts() repository.LostStore {
 	return newLost(ds)
 }
@@ -52,6 +56,6 @@ func (ds *datastore) Rescues() repository.RescueStore {
 	return newRescue(ds)
 }
 
-func (ds *datastore) Categories() repository.CategoryStore {
-	return newCategory(ds)
+func (ds *datastore) Westores() repository.WestoreStore {
+	return newWestore(ds)
 }

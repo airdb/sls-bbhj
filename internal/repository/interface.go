@@ -11,6 +11,7 @@ type Factory interface {
 	Categories() CategoryStore
 	Losts() LostStore
 	Rescues() RescueStore
+	Westores() WestoreStore
 	Close() error
 }
 
@@ -27,6 +28,13 @@ type LostStore interface {
 // RescueStore defines the rescue storage interface.
 type RescueStore interface {
 	List(ctx context.Context, opts schema.RescueListRequest) ([]*schema.Rescue, error)
+	Count(ctx context.Context) (int64, error)
+}
+
+// WestoreStore defines the rescue storage interface.
+type WestoreStore interface {
+	List(ctx context.Context, opts schema.WestoreListRequest) ([]*schema.Westore, error)
+	CreateOrUpdate(ctx context.Context, item *schema.Westore) error
 }
 
 // CategoryStore defines the lost category interface.
