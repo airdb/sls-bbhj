@@ -7,7 +7,9 @@ import (
 
 	"github.com/airdb/sls-bbhj/internal/aggregate"
 	"github.com/airdb/sls-bbhj/internal/repository"
+	"github.com/airdb/sls-bbhj/pkg/cache"
 	"github.com/airdb/sls-bbhj/pkg/schema"
+	"github.com/airdb/sls-bbhj/pkg/util"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
@@ -127,8 +129,92 @@ func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {object} schema.Response
 // @Router  /v1/lost/{lost_id}/share/{share_key}/callback [get]
 func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
-	resp := schema.LostGetResponse{
-		Success: true,
+	var (
+		redisCli = cache.NewRedis()
+		resp     = schema.LostGetResponse{
+			Success: true,
+		}
+		shareKey string
+	)
+
+	id, err := strconv.Atoi(chi.URLParam(r, "lost_id"))
+	if err != nil {
+		log.Println(err)
+
+		resp.Success = false
+		render.JSON(w, r, resp)
+
+		return
+	}
+
+	// shareKey := chi.URLParam(r, "share_key")
+	if shareKey = chi.URLParam(r, "share_key"); shareKey == "" {
+		log.Println("shareKey is empty")
+
+		resp.Success = false
+		render.JSON(w, r, resp)
+
+		return
+	}
+
+	shareKey += util.RemoteIp(r)
+
+	if _, err = c.repo.Losts().GetByID(r.Context(), uint(id)); err != nil {
+		log.Println(err)
+
+		resp.Success = false
+		render.JSON(w, r, resp)
+
+		return
+	}
+
+	shareKeyRedisValue, err := redisCli.Get(shareKey)
+	if err != nil {
+		log.Println(err)
+
+		resp.Success = false
+		render.JSON(w, r, resp)
+
+		return
+	}
+
+	var shareCount int
+	if shareKeyRedisValue != "" {
+		shareCount, err = strconv.Atoi(shareKeyRedisValue)
+		if err != nil {
+			log.Println(err)
+
+			resp.Success = false
+			render.JSON(w, r, resp)
+
+			return
+		}
+	}
+
+	if shareCount >= 3 {
+		render.JSON(w, r, resp)
+
+		return
+	}
+
+	shareCount++
+
+	if err = redisCli.Set(shareKey, strconv.Itoa(shareCount), 0); err != nil {
+		log.Println(err)
+
+		resp.Success = false
+		render.JSON(w, r, resp)
+
+		return
+	}
+
+	if err = c.repo.Losts().IncreaseShare(r.Context(), uint(id)); err != nil {
+		log.Println(err)
+
+		resp.Success = false
+		render.JSON(w, r, resp)
+
+		return
 	}
 
 	render.JSON(w, r, resp)
