@@ -30,7 +30,11 @@ func (r *lost) List(ctx context.Context, opts schema.LostListRequest) ([]*schema
 		Order("id desc")
 
 	if len(opts.Keyword) > 0 {
-		tx = tx.Where("nickname like ?", "%"+opts.Keyword+"%")
+		queryWord := "%" + opts.Keyword + "%"
+		tx = tx.Where("(nickname like ?) OR (missed_address like ?)",
+			queryWord,
+			queryWord,
+		)
 	}
 
 	if len(opts.Category) > 0 {
@@ -48,7 +52,7 @@ func (r *lost) List(ctx context.Context, opts schema.LostListRequest) ([]*schema
 }
 
 // Get gets a new talk item.
-func (r *lost) GetByID(ctx context.Context, id int) (*schema.Lost, error) {
+func (r *lost) GetByID(ctx context.Context, id uint) (*schema.Lost, error) {
 	item := &schema.Lost{}
 	err := r.db.Where("id = ?", id).First(&item).Error
 	if err != nil {
@@ -75,4 +79,82 @@ func (r *lost) GetByUUID(ctx context.Context, uuid string) (*schema.Lost, error)
 	}
 
 	return item, nil
+}
+
+// CreateStatByID crate a lost stat from a lost.
+func (r *lost) CreateStatByID(ctx context.Context, id uint) (*schema.LostStat, error) {
+	lost, err := r.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	item := &schema.LostStat{
+		LostID: lost.ID,
+		Babyid: lost.Babyid,
+	}
+	err = r.db.Create(item).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("record not exist")
+		}
+
+		return nil, errors.New("can not found record")
+	}
+
+	return item, nil
+}
+
+// GetStatByID get a lost stat by a lost id. if not exist then create it.
+func (r *lost) GetStatByID(ctx context.Context, id uint) (*schema.LostStat, error) {
+	item := &schema.LostStat{}
+	err := r.db.Where("lost_id = ?", id).First(&item).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return r.CreateStatByID(ctx, id)
+		}
+
+		return nil, errors.New("can not found record")
+	}
+
+	return item, nil
+}
+
+// IncreaseShare get a lost stat by a lost id. if not exist then create it.
+func (r *lost) IncreaseShare(ctx context.Context, id uint) error {
+	item := &schema.LostStat{
+		LostID: id,
+	}
+	err := r.db.Model(item).
+		Where("lost_id = ?", id).
+		UpdateColumn("share_count", gorm.Expr("share_count + ?", 1)).
+		Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return err
+		}
+
+		return errors.New("can not increse share")
+	}
+
+	return nil
+}
+
+// IncreaseShow get a lost stat by a lost id. if not exist then create it.
+func (r *lost) IncreaseShow(ctx context.Context, id uint) error {
+	item := &schema.LostStat{
+		LostID: id,
+	}
+	err := r.db.Model(item).
+		Where("lost_id = ?", id).
+		UpdateColumn("show_count", gorm.Expr("show_count + ?", 1)).
+		Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return err
+		}
+
+		return errors.New("can not increse show")
+	}
+
+	return nil
 }

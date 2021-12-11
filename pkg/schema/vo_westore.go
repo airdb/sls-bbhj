@@ -6,11 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Rescue struct {
-	// gorm.Model
-	// ID        string `gorm:"primary_key"`
-	//  Timestamp int64
-	// CreatedAt    time.Time `sql:"DEFAULT:current_timestamp"`
+type WestoreItem struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
@@ -21,9 +17,24 @@ type Rescue struct {
 	EndedAt   time.Time `json:"ended_at"`
 	Province  string    `json:"provice"`
 	City      string    `json:"city"`
-	Address   string    `json:"address"`
 	District  string    `json:"district"`
 	Is24Hour  *bool     `json:"is_24_hour"`
-	Phone1    string    `json:"phone1"`
-	Phone2    string    `json:"phone2"`
+}
+
+type WestoreListRequest struct {
+	Pagination
+	Keyword string `form:"keyword"`
+}
+
+func (m *WestoreListRequest) Valadate() error {
+	if err := m.Pagination.Valadate(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+type WestoreListResponse struct {
+	Data    []*WestoreItem `json:"data"`
+	Success bool           `json:"success"`
 }

@@ -46,3 +46,17 @@ CREATE TABLE `tab_rescue` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `address` (`address`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+CREATE TABLE `tab_lost_stat` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `lost_id` int(10) unsigned NOT NULL,
+  `babyid` varchar(255) DEFAULT NULL,
+  `share_count` int(10) unsigned NOT NULL DEFAULT 0,
+  `show_count` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `lost_id` (`uniq_lost`),
+  KEY `idx_deleted_at` (`deleted_at`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;

@@ -21,6 +21,7 @@
 ### 环境文件
 
 https://github.com/serverless/serverless-tencent/discussions/22
+
 https://github.com/serverless/serverless-tencent/blob/master/docs/basic/variables.md
 
 1. .env

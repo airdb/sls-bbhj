@@ -2,9 +2,15 @@ package aggregate
 
 import "github.com/airdb/sls-bbhj/internal/repository"
 
+const (
+	defaultTimeFormat = "2006-01-02 15:04:05"
+)
+
 // Aggregate defines functions used to return resource interface.
 type Aggregate interface {
+	Lbs() LbsAggr
 	Losts() LostAggr
+	Westores() WestoreAggr
 }
 
 type aggregate struct {
@@ -17,6 +23,15 @@ func New(repo repository.Factory) Aggregate {
 		repo: repo,
 	}
 }
+
+func (aggr *aggregate) Lbs() LbsAggr {
+	return newLbs()
+}
+
 func (aggr *aggregate) Losts() LostAggr {
 	return newLosts(aggr)
+}
+
+func (aggr *aggregate) Westores() WestoreAggr {
+	return newWestores(aggr)
 }
