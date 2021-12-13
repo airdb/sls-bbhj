@@ -1,6 +1,8 @@
 package aggregate
 
-import "github.com/airdb/sls-bbhj/internal/repository"
+import (
+	"github.com/airdb/sls-bbhj/internal/repository"
+)
 
 const (
 	defaultTimeFormat = "2006-01-02 15:04:05"
@@ -11,6 +13,7 @@ type Aggregate interface {
 	Lbs() LbsAggr
 	Losts() LostAggr
 	Westores() WestoreAggr
+	Redis() *redisAggr
 }
 
 type aggregate struct {
@@ -34,4 +37,8 @@ func (aggr *aggregate) Losts() LostAggr {
 
 func (aggr *aggregate) Westores() WestoreAggr {
 	return newWestores(aggr)
+}
+
+func (aggr *aggregate) Redis() *redisAggr {
+	return newRedis()
 }
