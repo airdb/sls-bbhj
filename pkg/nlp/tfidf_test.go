@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/airdb/wxwork-kf/pkg/nlp"
+	"github.com/airdb/sls-bbhj/pkg/nlp"
 )
 
 func TestTfidf(t *testing.T) {

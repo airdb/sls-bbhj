@@ -10,7 +10,7 @@ app: 'bbhj' # 应用名称。留空则默认取当前组件的实例名称为app
 stage: ${env:STAGE} # 环境名称。默认值是 dev。建议使用${env:STAGE}变量定义环境名称
 
 component: scf
-name: mina
+name: bbhj
 
 inputs:
   src:

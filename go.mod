@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/airdb/sailor v0.0.0-20211024160747-2ae4b0a65130
-	github.com/airdb/wxwork-kf v0.0.0-20211008114408-4dc096a4217a
 	github.com/asmcos/requests v0.0.0-20210319030608-c839e8ae4946
 	github.com/go-chi/chi/v5 v5.0.4
 	github.com/go-chi/render v1.0.1
@@ -17,6 +16,7 @@ require (
 	github.com/silenceper/wechat/v2 v2.0.9
 	github.com/stretchr/testify v1.7.0
 	github.com/swaggo/http-swagger v1.1.1
+	github.com/swaggo/swag v1.7.1
 	gorm.io/driver/mysql v1.1.2
 	gorm.io/gorm v1.21.15
 )
@@ -52,7 +52,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/serverless-plus/tencent-serverless-go v1.0.1 // indirect
-	github.com/swaggo/swag v1.7.1 // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/net v0.0.0-20211029224645-99673261e6eb // indirect
