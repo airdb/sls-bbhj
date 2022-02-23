@@ -36,11 +36,12 @@ type Lost struct {
 	MissedCity     string    `json:"missed_city"`
 	MissedAddress  string    `json:"missed_address"`
 	MissedAt       time.Time `gorm:"column:missed_at;type:datetime" json:"missed_at"`
-	Handler        string    `json:"handler"`
-	Babyid         string    `json:"babyid"`
-	Category       string    `json:"category"`
-	Height         string    `json:"height"`
-	SyncStatus     int       `gorm:"column:syncstatus;default:0" json:"sync_status"`
+	// Handler        string    `json:"handler"`
+	Follower   string `json:"follower"`
+	Babyid     string `json:"babyid"`
+	Category   string `json:"category"`
+	Height     string `json:"height"`
+	SyncStatus int    `gorm:"column:syncstatus;default:0" json:"sync_status"`
 }
 
 type LostStat struct {

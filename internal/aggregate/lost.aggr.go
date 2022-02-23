@@ -46,14 +46,14 @@ func (u *lostAggr) List(ctx context.Context, opts schema.LostListRequest) ([]*sc
 	data := make([]*schema.LostItem, len(items))
 	for k, v := range items {
 		data[k] = &schema.LostItem{
-			ID:           v.ID,
-			Title:        v.Subject,
-			Category:     v.Category,
-			Name:         v.Nickname,
-			Babyid:       v.Babyid,
-			Introduction: v.Subject,
-			MissAt:       v.MissedAt.Format(defaultTimeFormat),
-			MissAddr:     v.MissedAddress,
+			ID:            v.ID,
+			Title:         v.Subject,
+			Category:      v.Category,
+			Name:          v.Nickname,
+			Babyid:        v.Babyid,
+			Introduction:  v.Subject,
+			MissedAt:      v.MissedAt.Format(defaultTimeFormat),
+			MissedAddress: v.MissedAddress,
 		}
 	}
 
@@ -105,12 +105,15 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 		MissAt:     item.MissedAt.Format(defaultTimeFormat),
 		MissAddr:   item.MissedAddress,
 		MissHeight: item.Height,
-		Character:  item.Characters,
+		// Character:  item.Characters,
+		Details:   item.Details,
+		Character: item.Characters + "<br>" + item.Details,
 
 		// 寻亲信息
 		Category: item.Category,
 		DataFrom: item.DataFrom,
-		Follower: item.Details,
+		// Follower: item.Details,
+		Follower: item.Follower,
 
 		WxMore: &schema.WxMore{
 			ShareAppMessage: &schema.WxShareAppMessage{

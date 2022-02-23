@@ -35,8 +35,10 @@ type LostItem struct {
 	Name         string `json:"name"`         // 姓名
 	Babyid       string `json:"babyid"`       // 失踪人员登记编号
 	Introduction string `json:"introduction"` // 简介内容
-	MissAt       string `json:"miss_at"`      // 丢失日期
-	MissAddr     string `json:"miss_addr"`    // 地点
+	// MissAt       string `json:"miss_at"`      // 丢失日期
+	// MissAddr     string `json:"miss_addr"`    // 地点
+	MissedAt      string `json:"missed_at"`      // 丢失日期
+	MissedAddress string `json:"missed_address"` // 地点
 }
 
 // LostDetail 失踪信息 详情页条目
@@ -61,6 +63,7 @@ type LostDetail struct {
 	MissAddr   string `json:"miss_addr"`   // 失踪地点
 	MissHeight string `json:"miss_height"` // 失踪时身高
 	Character  string `json:"character"`   // 特征
+	Details    string `json:"details"`     // 失踪详情
 
 	// 寻亲信息
 	Category string `json:"category"`  // 寻亲类型
