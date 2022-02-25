@@ -33,6 +33,7 @@ func (c LostController) Routes() chi.Router {
 	r.Get("/", c.List)
 	r.Get("/{lost_id}", c.Show)
 	r.Get("/{lost_id}/share/{share_key}/callback", c.ShareCallback)
+	r.Get("/{lost_id}/"+aggregate.LOST_WXMP_CODE_FILENAME, c.GetMpCode)
 
 	return r
 }
@@ -218,4 +219,33 @@ func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.JSON(w, r, resp)
+}
+
+// [TODO] GetMpCode
+// @Summary 失踪信息 小程序码
+// @Description 通过失踪信息ID获取小程序码.
+// @Tags    lost
+// @Accept  json
+// @Produce json
+// @Param   lost_id    path  int     true  "Lost ID"
+// @Success 200 {object} schema.Response
+// @Router  /v1/lost/{lost_id}/mpCode [get]
+func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "lost_id"))
+	if err != nil {
+		log.Println(err)
+
+		render.Data(w, r, []byte("id not exist"))
+
+		return
+	}
+
+	code := c.aggr.Losts().GetWxMpCode(r.Context(), uint(id))
+
+	w.Header().Set("Content-Type", "image/jpeg")
+	if status, ok := r.Context().Value(render.StatusCtxKey).(int); ok {
+		w.WriteHeader(status)
+	}
+
+	w.Write(code)
 }

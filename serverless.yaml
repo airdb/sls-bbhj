@@ -36,15 +36,20 @@ inputs:
     variables: #  环境变量对象
       ENV: ${stage}
       env: ${stage}
-      WXKF_REDIS_ADDR: ${env:WXKF_REDIS_ADDR}
-      WXKF_REDIS_PASSWD: ${env:WXKF_REDIS_PASSWD}
-      WXKF_REDIS_DB: ${env:WXKF_REDIS_DB}
+      MAIN_DSN_WRITE: ${env:MAIN_DSN_WRITE}
+      MAIN_DSN_READ: ${env:MAIN_DSN_READ}
       WXKF_CORP_ID: ${env:WXKF_CORP_ID}
       WXKF_SECRET: ${env:WXKF_SECRET}
       WXKF_TOKEN: ${env:WXKF_TOKEN}
       WXKF_ENCODING_AES_KEY: ${env:WXKF_ENCODING_AES_KEY}
-      MAIN_DSN_WRITE: ${env:MAIN_DSN_WRITE}
-      MAIN_DSN_READ: ${env:MAIN_DSN_READ}
+      WXKF_REDIS_ADDR: ${env:WXKF_REDIS_ADDR}
+      WXKF_REDIS_PASSWD: ${env:WXKF_REDIS_PASSWD}
+      WXKF_REDIS_DB: ${env:WXKF_REDIS_DB}
+      WX_REDIS_ADDR: ${env:WX_REDIS_ADDR}
+      WX_REDIS_PASSWD: ${env:WX_REDIS_PASSWD}
+      WXMP_REDIS_DB: ${env:WXMP_REDIS_DB}
+      WXMP_APPID: ${env:WXMP_APPID}
+      WXMP_APPSECRET: ${env:WXMP_APPSECRET}
 
   publicAccess: true # 是否开启公网访问
 
