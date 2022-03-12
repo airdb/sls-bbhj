@@ -2,12 +2,14 @@ package aggregate
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/url"
 	"strconv"
 
 	"github.com/airdb/sls-bbhj/internal/repository"
 	"github.com/airdb/sls-bbhj/pkg/schema"
+	"github.com/airdb/sls-bbhj/pkg/util"
 	"github.com/google/uuid"
 )
 
@@ -15,11 +17,16 @@ import (
 type LostAggr interface {
 	List(ctx context.Context, opts schema.LostListRequest) ([]*schema.LostItem, error)
 	GetByID(ctx context.Context, id uint) (*schema.LostDetail, error)
+	GetWxMpCode(ctx context.Context, id uint) []byte
 }
 
 type lostAggr struct {
 	repo repository.Factory
 }
+
+const (
+	LOST_WXMP_CODE_FILENAME = `wxmp_code.jpg`
+)
 
 var _ LostAggr = (*lostAggr)(nil)
 
@@ -131,6 +138,22 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 				}(),
 				ImageURL: item.AvatarURL,
 			},
+			CodeUnlimit: &schema.WxCodeUnlimit{
+				URL: fmt.Sprintf(`/v1/lost/%d/%s`, item.ID, LOST_WXMP_CODE_FILENAME),
+			},
 		},
 	}, nil
+}
+
+func (u *lostAggr) GetWxMpCode(ctx context.Context, id uint) []byte {
+	wx := util.NewWechatMiniProgram(util.NewWechat())
+	code, err := wx.CodeUnlimit(
+		`pages/article/detail/index`,
+		fmt.Sprintf("id=%d", id),
+	)
+	if err != nil {
+		return []byte("error")
+	}
+
+	return code
 }

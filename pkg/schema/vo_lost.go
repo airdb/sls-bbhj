@@ -21,8 +21,17 @@ type LostListResponse struct {
 	Success bool        `json:"success"`
 }
 
-// LostListRequest 失踪信息 详情返回
+// LostGetResponse 失踪信息 详情返回
 type LostGetResponse struct {
+	Data    *LostDetail `json:"data"`
+	Success bool        `json:"success"`
+}
+
+type LostMpCode struct {
+}
+
+// LostGetMpCodeResponse 失踪信息 详情返回
+type LostGetMpCodeResponse struct {
 	Data    *LostDetail `json:"data"`
 	Success bool        `json:"success"`
 }
