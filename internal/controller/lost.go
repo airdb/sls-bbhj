@@ -136,7 +136,7 @@ func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Todo: 保存失踪信息。
-	item, err := c.aggr.Losts().GetByID(r.Context(), uint(1))
+	item, err := c.aggr.Losts().GetByID(r.Context(), uint(5))
 	if err != nil {
 		log.Println(err)
 
