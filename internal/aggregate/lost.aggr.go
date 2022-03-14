@@ -18,6 +18,7 @@ type LostAggr interface {
 	List(ctx context.Context, opts schema.LostListRequest) ([]*schema.LostItem, error)
 	GetByID(ctx context.Context, id uint) (*schema.LostDetail, error)
 	GetWxMpCode(ctx context.Context, id uint) []byte
+	Create(ctx context.Context, opts schema.LostCreateRequest) error
 }
 
 type lostAggr struct {
@@ -112,14 +113,12 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 		MissAt:     item.MissedAt.Format(defaultTimeFormat),
 		MissAddr:   item.MissedAddress,
 		MissHeight: item.Height,
-		// Character:  item.Characters,
-		Details:   item.Details,
-		Character: item.Characters + "<br>" + item.Details,
+		Details:    item.Details,
+		Character:  item.Characters + "<br>" + item.Details,
 
 		// 寻亲信息
 		Category: item.Category,
 		DataFrom: item.DataFrom,
-		// Follower: item.Details,
 		Follower: item.Follower,
 
 		WxMore: &schema.WxMore{
@@ -156,4 +155,8 @@ func (u *lostAggr) GetWxMpCode(ctx context.Context, id uint) []byte {
 	}
 
 	return code
+}
+
+func (u *lostAggr) Create(ctx context.Context, in schema.LostCreateRequest) error {
+	return u.repo.Losts().Create(ctx, in)
 }

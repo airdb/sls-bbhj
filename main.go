@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sailor/deployutil"
@@ -55,7 +55,7 @@ func main() {
 	mux.Use(render.SetContentType(render.ContentTypeJSON))
 
 	// p := filepath.Join("/", deployutil.GetDeployStage(), "/", project)
-	p := filepath.Join("/", project)
+	p := fmt.Sprintf("/%s", project)
 
 	mux.Route(p, func(r chi.Router) {
 		r.Get("/version", faas.HandleVersion)

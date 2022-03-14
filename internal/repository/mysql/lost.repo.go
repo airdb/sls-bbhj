@@ -158,3 +158,36 @@ func (r *lost) IncreaseShow(ctx context.Context, id uint) error {
 
 	return nil
 }
+
+// Create create a lost record.
+func (r *lost) Create(ctx context.Context, in schema.LostCreateRequest) error {
+	item := &schema.Lost{
+		Nickname:  in.Name,
+		Gender:    in.Gender,
+		BirthedAt: in.BirthedAt,
+
+		MissedAt:       in.MissedAt,
+		MissedCountry:  in.MissedCountry,
+		MissedProvince: in.MissedProvince,
+		MissedCity:     in.MissedCity,
+		MissedAddress:  in.MissedAddr,
+		Height:         in.MissedHeight,
+
+		Characters: in.Character,
+		Details:    in.Details,
+
+		Category: in.Category,
+		DataFrom: in.DataFrom,
+		Follower: in.Follower,
+	}
+
+	if err := r.db.Create(item).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return err
+		}
+
+		return errors.New("can not create lost")
+	}
+
+	return nil
+}

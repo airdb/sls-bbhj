@@ -14,6 +14,7 @@ type Aggregate interface {
 	Losts() LostAggr
 	Westores() WestoreAggr
 	Redis() *redisAggr
+	Passport() *passportAggr
 }
 
 type aggregate struct {
@@ -41,4 +42,8 @@ func (aggr *aggregate) Westores() WestoreAggr {
 
 func (aggr *aggregate) Redis() *redisAggr {
 	return newRedis()
+}
+
+func (aggr *aggregate) Passport() *passportAggr {
+	return newPassport(aggr)
 }

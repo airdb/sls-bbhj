@@ -1,6 +1,11 @@
 package schema
 
-import "net/http"
+import (
+	"fmt"
+	"log"
+	"net/http"
+	"time"
+)
 
 // LostListRequest 失踪信息 列表请求
 type LostListRequest struct {
@@ -85,20 +90,23 @@ type LostDetail struct {
 	WxMore *WxMore `json:"wx_more"` // 微信相关信息
 }
 
-// LostCreate 失踪信息 录入
-type LostCreate struct {
+// LostCreateRequest 失踪信息 录入
+type LostCreateRequest struct {
 	// 基础信息
-	NameMore  string         `json:"name_more"`  // 姓名
-	Gender    string         `json:"gender"`     // 性别
-	BirthedAt string         `json:"birthed_at"` // 出生日期
+	Name      string         `json:"name"`       // 姓名
+	Gender    uint           `json:"gender"`     // 性别: 1男 2女 0未知
+	BirthedAt time.Time      `json:"birthed_at"` // 出生日期
 	Carousel  []CarouselItem `json:"carousel"`   // 寻亲目标轮播图
 
 	// 失踪信息
-	MissAt     string `json:"miss_at"`     // 失踪时间
-	MissAddr   string `json:"miss_addr"`   // 失踪地点
-	MissHeight string `json:"miss_height"` // 失踪时身高
-	Character  string `json:"character"`   // 特征
-	Details    string `json:"details"`     // 失踪详情
+	MissedAt       time.Time `json:"missed_at"`       // 失踪时间
+	MissedCountry  string    `json:"missed_country"`  // 失踪国家
+	MissedProvince string    `json:"missed_province"` // 失踪省
+	MissedCity     string    `json:"missed_city"`     // 失踪市
+	MissedAddr     string    `json:"missed_addr"`     // 详细地址
+	MissedHeight   string    `json:"missed_height"`   // 失踪时身高
+	Character      string    `json:"character"`       // 特征
+	Details        string    `json:"details"`         // 失踪详情
 
 	// 寻亲信息
 	Category string `json:"category"`  // 寻亲类型
@@ -106,6 +114,58 @@ type LostCreate struct {
 	Follower string `json:"follower"`  // 跟进志愿者
 }
 
-func (m LostCreate) Bind(r *http.Request) error {
+func (m *LostCreateRequest) Valadate() error {
+	if len(m.Name) == 0 {
+		return fmt.Errorf("请输入 姓名")
+	}
+
+	if m.BirthedAt.IsZero() {
+		return fmt.Errorf("请输入 出生日期")
+	}
+
+	if m.MissedAt.IsZero() {
+		return fmt.Errorf("请输入 失踪时间")
+	}
+
+	if len(m.MissedAddr) == 0 {
+		return fmt.Errorf("请输入 失踪地点")
+	}
+
+	if len(m.MissedHeight) == 0 {
+		return fmt.Errorf("请输入 失踪时身高")
+	}
+
+	if len(m.Character) == 0 {
+		return fmt.Errorf("请输入 特征")
+	}
+
+	if len(m.Details) == 0 {
+		return fmt.Errorf("请输入 失踪详情")
+	}
+
+	if len(m.Category) == 0 {
+		return fmt.Errorf("请输入 寻亲类型")
+	}
+
+	if len(m.DataFrom) == 0 {
+		return fmt.Errorf("请输入 信息来源")
+	}
+
+	if len(m.Follower) == 0 {
+		return fmt.Errorf("请输入 跟进志愿者")
+	}
+
+	log.Println(m.MissedAt, m.MissedAt.IsZero())
+
 	return nil
+}
+
+func (m LostCreateRequest) Bind(r *http.Request) error {
+	return nil
+}
+
+// LostCreateResponse 失踪信息 录入
+type LostCreateResponse struct {
+	Message string `json:"message"`
+	Success bool   `json:"success"`
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,6 +13,7 @@ import (
 	"github.com/airdb/sls-bbhj/pkg/schema"
 	"github.com/airdb/sls-bbhj/pkg/util"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
 )
 
@@ -35,7 +37,33 @@ func (c LostController) Routes() chi.Router {
 	r.Get("/{lost_id}/share/{share_key}/callback", c.ShareCallback)
 	r.Get("/{lost_id}/"+aggregate.LOST_WXMP_CODE_FILENAME, c.GetMpCode)
 
+	c.aggr.Passport().Middleware(r, func(r chi.Router) {
+		r.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				token, _, _ := jwtauth.FromContext(r.Context())
+
+				if token != nil && !c.allowCreate(token.Subject()) {
+					http.Error(w, "no permission", http.StatusUnauthorized)
+					return
+				}
+
+				next.ServeHTTP(w, r)
+			})
+		})
+		r.Post("/", c.Create)
+	})
+
 	return r
+}
+
+// 检查权限
+func (c LostController) allowCreate(subject string) bool {
+	res, err := c.aggr.Redis().Get(fmt.Sprintf("wxmp_passport:%s", subject))
+	if err != nil {
+		return false
+	}
+
+	return strings.Contains(res, "lost::create")
 }
 
 // LostList
@@ -251,8 +279,8 @@ func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
 }
 
 // LostCreate
-// @Summary 失踪信息 详情。
-// @Description 失踪信息 详情。lost_id为对应列表页中的id.
+// @Summary 失踪信息 录入。
+// @Description 失踪信息 录入；权限管理暂时放于redis中，以 wxmp_permission:<open_id> 为规则，内容为权限标识，以英文逗号分隔。权限标识：lost_create。
 // @Tags    lost
 // @Accept  json
 // @Produce json
@@ -260,29 +288,32 @@ func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
 // @Success 200 {object} schema.LostCreateResponse
 // @Router  /v1/lost [post]
 func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
-	var lostCreate schema.LostCreate
+	var in schema.LostCreateRequest
 
-	if err := render.Bind(r, &lostCreate); err != nil {
+	if err := render.Bind(r, &in); err != nil {
 		log.Println(err)
 
 		return
 	}
 
-	item, err := c.aggr.Losts().GetByID(r.Context(), uint(id))
-	if err != nil {
-		log.Println(err)
+	resp := schema.LostCreateResponse{}
 
+	if err := in.Valadate(); err != nil {
+		resp.Message = err.Error()
+
+		render.JSON(w, r, resp)
 		return
 	}
 
-	if err = c.repo.Losts().IncreaseShow(r.Context(), uint(id)); err != nil {
-		log.Printf("increase lost show failed: %s", err.Error())
+	if err := c.aggr.Losts().Create(r.Context(), in); err != nil {
+		log.Println(err)
+		resp.Message = "录入信息失败，请联系管理员。"
+
+		render.JSON(w, r, resp)
+		return
 	}
 
-	resp := schema.LostGetResponse{
-		Data:    item,
-		Success: true,
-	}
+	resp.Success = true
 
 	render.JSON(w, r, resp)
 }

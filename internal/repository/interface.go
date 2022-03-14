@@ -23,6 +23,7 @@ type LostStore interface {
 	GetStatByID(ctx context.Context, id uint) (*schema.LostStat, error)
 	IncreaseShare(ctx context.Context, id uint) error
 	IncreaseShow(ctx context.Context, id uint) error
+	Create(ctx context.Context, in schema.LostCreateRequest) error
 }
 
 // RescueStore defines the rescue storage interface.

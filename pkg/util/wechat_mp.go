@@ -1,6 +1,7 @@
 package util
 
 import (
+	stdCtx "context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -24,6 +25,29 @@ func NewWechatMiniProgram(wx *wechat.Wechat) *WechatMiniProgram {
 			AppSecret: os.Getenv(`WXMP_APPSECRET`),
 		}),
 	}
+}
+
+//
+func (wx *WechatMiniProgram) Code2SessionContext(ctx stdCtx.Context, code string) (string, error) {
+	res, err := wx.GetAuth().Code2SessionContext(ctx, code)
+	if err != nil {
+		return "", err
+	}
+
+	cacheKey := fmt.Sprintf("wxmp_oid:%s", res.OpenID)
+	cacheContent, err := json.Marshal(res)
+	if err != nil {
+		return "", err
+	}
+
+	rpConn := GetCacheRedisPool().Get()
+
+	// 缓存30天
+	if data, err := json.Marshal(cacheContent); err == nil {
+		rpConn.Do("SETEX", cacheKey, 86400*30, string(data))
+	}
+
+	return res.OpenID, nil
 }
 
 // CodeUnlimit 生成小程序二维码

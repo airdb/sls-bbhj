@@ -25,14 +25,14 @@ type Redis struct {
 func NewRedis() *Redis {
 	ctx := context.TODO()
 	instance := Redis{}
-	addr, err := strconv.Atoi(os.Getenv("WXKF_REDIS_DB"))
+	addr, err := strconv.Atoi(os.Getenv("WX_REDIS_DB"))
 	if err != nil {
 		return nil
 	}
 	// 实例化连接池，解决每次重新连接效率低的问题
 	instance.Point = redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("WXKF_REDIS_ADDR"),
-		Password: os.Getenv("WXKF_REDIS_PASSWD"),
+		Addr:     os.Getenv("WX_REDIS_ADDR"),
+		Password: os.Getenv("WX_REDIS_PASSWD"),
 		DB:       addr,
 	})
 

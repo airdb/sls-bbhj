@@ -1,7 +1,7 @@
 # load env file
 ifeq ($(shell test -e .env && echo -n yes),yes)
 include .env
-export $(shell sed 's/=.*//' .env)
+export $(shell sed 's/[\#=].*//' .env)
 endif
 
 # generate build version info
