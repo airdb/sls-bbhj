@@ -229,7 +229,7 @@ func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Param   lost_id    path  int     true  "Lost ID"
 // @Success 200 {object} schema.Response
-// @Router  /v1/lost/{lost_id}/mpCode [get]
+// @Router  /v1/lost/{lost_id}/wxmp_code.jpg [get]
 func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "lost_id"))
 	if err != nil {
@@ -248,4 +248,41 @@ func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(code)
+}
+
+// LostCreate
+// @Summary 失踪信息 详情。
+// @Description 失踪信息 详情。lost_id为对应列表页中的id.
+// @Tags    lost
+// @Accept  json
+// @Produce json
+// @Param   lost_id  path  int  true  "Lost ID"
+// @Success 200 {object} schema.LostCreateResponse
+// @Router  /v1/lost [post]
+func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
+	var lostCreate schema.LostCreate
+
+	if err := render.Bind(r, &lostCreate); err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	item, err := c.aggr.Losts().GetByID(r.Context(), uint(id))
+	if err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	if err = c.repo.Losts().IncreaseShow(r.Context(), uint(id)); err != nil {
+		log.Printf("increase lost show failed: %s", err.Error())
+	}
+
+	resp := schema.LostGetResponse{
+		Data:    item,
+		Success: true,
+	}
+
+	render.JSON(w, r, resp)
 }

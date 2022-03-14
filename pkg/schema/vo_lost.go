@@ -1,5 +1,7 @@
 package schema
 
+import "net/http"
+
 // LostListRequest 失踪信息 列表请求
 type LostListRequest struct {
 	Pagination
@@ -81,4 +83,29 @@ type LostDetail struct {
 
 	// 第三方交互
 	WxMore *WxMore `json:"wx_more"` // 微信相关信息
+}
+
+// LostCreate 失踪信息 录入
+type LostCreate struct {
+	// 基础信息
+	NameMore  string         `json:"name_more"`  // 姓名
+	Gender    string         `json:"gender"`     // 性别
+	BirthedAt string         `json:"birthed_at"` // 出生日期
+	Carousel  []CarouselItem `json:"carousel"`   // 寻亲目标轮播图
+
+	// 失踪信息
+	MissAt     string `json:"miss_at"`     // 失踪时间
+	MissAddr   string `json:"miss_addr"`   // 失踪地点
+	MissHeight string `json:"miss_height"` // 失踪时身高
+	Character  string `json:"character"`   // 特征
+	Details    string `json:"details"`     // 失踪详情
+
+	// 寻亲信息
+	Category string `json:"category"`  // 寻亲类型
+	DataFrom string `json:"data_from"` // 信息来源
+	Follower string `json:"follower"`  // 跟进志愿者
+}
+
+func (m LostCreate) Bind(r *http.Request) error {
+	return nil
 }
