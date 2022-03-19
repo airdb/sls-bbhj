@@ -15,6 +15,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
+	"github.com/rs/xid"
 )
 
 type LostController struct {
@@ -314,6 +315,34 @@ func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp.Success = true
+
+	render.JSON(w, r, resp)
+}
+
+// LostPresignedURL
+// @Summary 失踪信息 图片上传token。
+// @Description 失踪信息 图片上传token。
+// @Tags    lost
+// @Accept  json
+// @Produce json
+// @Param   filename  query  string  true  "上传文件名"
+// @Param   length    query  int  true  "上传文件大小"
+// @Success 200 {object} schema.LostGetPresignedURLRequest
+// @Router  /v1/lost:presignedUrl [get] schema.LostGetPresignedURLResponse
+func (c LostController) GetPresignedURL(w http.ResponseWriter, r *http.Request) {
+	var resp schema.LostGetPresignedURLResponse
+
+	filename := r.URL.Query().Get("filename")
+	length, err := strconv.Atoi(r.URL.Query().Get("length"))
+	if len(filename) > 0 && err == nil {
+		url := util.GenQCloudCosPresigned(xid.New().String()+"_"+filename, length)
+		if url != nil {
+			resp.Success = true
+			resp.Data = schema.LostGetPresignedURL{
+				URL: url.String(),
+			}
+		}
+	}
 
 	render.JSON(w, r, resp)
 }

@@ -93,10 +93,10 @@ type LostDetail struct {
 // LostCreateRequest 失踪信息 录入
 type LostCreateRequest struct {
 	// 基础信息
-	Name      string         `json:"name"`       // 姓名
-	Gender    uint           `json:"gender"`     // 性别: 1男 2女 0未知
-	BirthedAt time.Time      `json:"birthed_at"` // 出生日期
-	Carousel  []CarouselItem `json:"carousel"`   // 寻亲目标轮播图
+	Name      string    `json:"name"`       // 姓名
+	Gender    uint      `json:"gender"`     // 性别: 1男 2女 0未知
+	BirthedAt time.Time `json:"birthed_at"` // 出生日期
+	Carousel  []string  `json:"carousel"`   // 寻亲目标轮播图
 
 	// 失踪信息
 	MissedAt       time.Time `json:"missed_at"`       // 失踪时间
@@ -168,4 +168,33 @@ func (m LostCreateRequest) Bind(r *http.Request) error {
 type LostCreateResponse struct {
 	Message string `json:"message"`
 	Success bool   `json:"success"`
+}
+
+// LostGetPresignedURLRequest 失踪信息 上传请求
+type LostGetPresignedURLRequest struct {
+	// 基础信息
+	Filename string `json:"filename"` // 文件名
+}
+
+func (m *LostGetPresignedURLRequest) Valadate() error {
+	if len(m.Filename) == 0 {
+		return fmt.Errorf("请输入 文件名")
+	}
+
+	return nil
+}
+
+func (m LostGetPresignedURLRequest) Bind(r *http.Request) error {
+	return nil
+}
+
+type LostGetPresignedURL struct {
+	URL string `json:"url"`
+}
+
+// LostGetPresignedURLResponse 失踪信息 上传请求
+type LostGetPresignedURLResponse struct {
+	Message string              `json:"message"`
+	Success bool                `json:"success"`
+	Data    LostGetPresignedURL `json:"data"`
 }

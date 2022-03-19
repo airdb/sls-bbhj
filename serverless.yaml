@@ -48,6 +48,11 @@ inputs:
       WXMP_REDIS_DB: ${env:WXMP_REDIS_DB}
       WXMP_APPID: ${env:WXMP_APPID}
       WXMP_APPSECRET: ${env:WXMP_APPSECRET}
+      TencentyunAppID: ${env:TencentyunAppID}
+      TencentyunAccessKeyID: ${env:TencentyunAccessKeyID}
+      TencentyunAccessKeySecret: ${env:TencentyunAccessKeySecret}
+      TencentyunBucketName: ${env:TencentyunBucketName}
+      TencentyunRegionID: ${env:TencentyunRegionID}
 
   publicAccess: true # 是否开启公网访问
 

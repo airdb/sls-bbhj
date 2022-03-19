@@ -67,6 +67,7 @@ func main() {
 
 		lostController := controller.NewLostController(mysqlRepo)
 		r.Mount("/v1/lost", lostController.Routes())
+		r.Get("/v1/lost:presignedUrl", lostController.GetPresignedURL)
 
 		rescueController := controller.NewRescueController(mysqlRepo)
 		r.Mount("/v1/rescue", rescueController.Routes())
