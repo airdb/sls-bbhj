@@ -85,6 +85,9 @@ func (wx *WechatMiniProgram) CodeUnlimit(page, scene string) (response []byte, e
 			}
 		}(),
 	}
+	if os.Getenv(`ENV`) == "test" {
+		codeParams.CheckPath = false
+	}
 	qc := wx.GetQRCode()
 	cacheContent.Data, err = qc.GetWXACodeUnlimit(codeParams)
 
