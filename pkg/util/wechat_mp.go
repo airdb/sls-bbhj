@@ -90,6 +90,7 @@ func (wx *WechatMiniProgram) CodeUnlimit(page, scene string) (response []byte, e
 
 	if err != nil {
 		log.Println("query CodeUnlimit", codeParams, err)
+		return []byte{}, err
 	}
 
 	// 缓存30天
