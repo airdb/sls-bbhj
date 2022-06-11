@@ -52,6 +52,10 @@ func (ds *datastore) Losts() repository.LostStore {
 	return newLost(ds)
 }
 
+func (ds *datastore) Files() repository.FileStore {
+	return newFile(ds)
+}
+
 func (ds *datastore) Rescues() repository.RescueStore {
 	return newRescue(ds)
 }

@@ -1,7 +1,7 @@
 # load env file
 ifeq ($(shell test -e .env && echo -n yes),yes)
 include .env
-export $(shell sed 's/=.*//' .env)
+export $(shell sed 's/[\#=].*//' .env)
 endif
 
 # generate build version info
@@ -28,10 +28,10 @@ dev: swag
 	env=dev go run $(LDFLAGS) main.go
 
 deploy:
-	sls deploy --stage test
+	sls deploy --stage test --profile airdb
 
 release:
-	sls deploy --stage release
+	sls deploy --stage release --profile airdb
 
 log:
 	sls logs --tail --stage test

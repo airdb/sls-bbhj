@@ -18,6 +18,7 @@ type LostAggr interface {
 	List(ctx context.Context, opts schema.LostListRequest) ([]*schema.LostItem, error)
 	GetByID(ctx context.Context, id uint) (*schema.LostDetail, error)
 	GetWxMpCode(ctx context.Context, id uint) []byte
+	Create(ctx context.Context, opts schema.LostCreateRequest) error
 }
 
 type lostAggr struct {
@@ -76,6 +77,13 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 		return nil, err
 	}
 
+	files, err := u.repo.Files().GetLostByID(ctx, id)
+	if err != nil {
+		log.Printf("get losts'file from storage failed: %s", err.Error())
+
+		return nil, err
+	}
+
 	stat, err := u.repo.Losts().GetStatByID(ctx, id)
 	if err != nil {
 		log.Printf("get losts from storage failed: %s", err.Error())
@@ -106,20 +114,27 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 			}
 		}(),
 		BirthedAt: item.BirthedAt.Format(defaultTimeFormat),
-		Carousel:  []schema.CarouselItem{},
+		Carousel: func() []schema.CarouselItem {
+			items := make([]schema.CarouselItem, len(files))
+			for k, v := range files {
+				items[k] = schema.CarouselItem{
+					ID:  v.ID,
+					URL: v.URL,
+				}
+			}
+			return items
+		}(),
 
 		// 失踪信息
 		MissAt:     item.MissedAt.Format(defaultTimeFormat),
 		MissAddr:   item.MissedAddress,
 		MissHeight: item.Height,
-		// Character:  item.Characters,
-		Details:   item.Details,
-		Character: item.Characters + "<br>" + item.Details,
+		Details:    item.Details,
+		Character:  item.Characters + "<br>" + item.Details,
 
 		// 寻亲信息
 		Category: item.Category,
 		DataFrom: item.DataFrom,
-		// Follower: item.Details,
 		Follower: item.Follower,
 
 		WxMore: &schema.WxMore{
@@ -151,9 +166,14 @@ func (u *lostAggr) GetWxMpCode(ctx context.Context, id uint) []byte {
 		`pages/article/detail/index`,
 		fmt.Sprintf("id=%d", id),
 	)
+	log.Println(code, err)
 	if err != nil {
 		return []byte("error")
 	}
 
 	return code
+}
+
+func (u *lostAggr) Create(ctx context.Context, in schema.LostCreateRequest) error {
+	return u.repo.Losts().Create(ctx, in)
 }

@@ -10,6 +10,7 @@ import (
 type Factory interface {
 	Categories() CategoryStore
 	Losts() LostStore
+	Files() FileStore
 	Rescues() RescueStore
 	Westores() WestoreStore
 	Close() error
@@ -23,6 +24,12 @@ type LostStore interface {
 	GetStatByID(ctx context.Context, id uint) (*schema.LostStat, error)
 	IncreaseShare(ctx context.Context, id uint) error
 	IncreaseShow(ctx context.Context, id uint) error
+	Create(ctx context.Context, in schema.LostCreateRequest) error
+}
+
+// FileStore defines the lost storage interface.
+type FileStore interface {
+	GetLostByID(ctx context.Context, t uint) ([]*schema.File, error)
 }
 
 // RescueStore defines the rescue storage interface.

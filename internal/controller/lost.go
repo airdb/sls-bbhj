@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -13,6 +14,7 @@ import (
 	"github.com/airdb/sls-bbhj/pkg/util"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"github.com/rs/xid"
 )
 
 type LostController struct {
@@ -34,8 +36,36 @@ func (c LostController) Routes() chi.Router {
 	r.Get("/{lost_id}", c.Show)
 	r.Get("/{lost_id}/share/{share_key}/callback", c.ShareCallback)
 	r.Get("/{lost_id}/"+aggregate.LOST_WXMP_CODE_FILENAME, c.GetMpCode)
+	r.Post("/", c.Create)
+
+	// 权限判断
+	// c.aggr.Passport().Middleware(r, func(r chi.Router) {
+	// 	r.Use(func(next http.Handler) http.Handler {
+	// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 			token, _, _ := jwtauth.FromContext(r.Context())
+
+	// 			if token != nil && !c.allowCreate(token.Subject()) {
+	// 				http.Error(w, "no permission", http.StatusUnauthorized)
+	// 				return
+	// 			}
+
+	// 			next.ServeHTTP(w, r)
+	// 		})
+	// 	})
+	// 	r.Post("/", c.Create)
+	// })
 
 	return r
+}
+
+// 检查权限
+func (c LostController) allowCreate(subject string) bool {
+	res, err := c.aggr.Redis().Get(fmt.Sprintf("wxmp_passport:%s", subject))
+	if err != nil {
+		return false
+	}
+
+	return strings.Contains(res, "lost::create")
 }
 
 // LostList
@@ -229,7 +259,7 @@ func (c LostController) ShareCallback(w http.ResponseWriter, r *http.Request) {
 // @Produce json
 // @Param   lost_id    path  int     true  "Lost ID"
 // @Success 200 {object} schema.Response
-// @Router  /v1/lost/{lost_id}/mpCode [get]
+// @Router  /v1/lost/{lost_id}/wxmp_code.jpg [get]
 func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "lost_id"))
 	if err != nil {
@@ -248,4 +278,77 @@ func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write(code)
+}
+
+// LostCreate
+// @Summary 失踪信息 录入。
+// @Description 失踪信息 录入；权限管理暂时放于redis中，以 wxmp_permission:<open_id> 为规则，内容为权限标识，以英文逗号分隔。权限标识：lost_create。
+// @Tags    lost
+// @Accept  json
+// @Produce json
+// @Param   message  body  schema.LostCreateRequest  true  "Lost Info"
+// @Success 200 {object} schema.LostCreateResponse
+// @Router  /v1/lost [post]
+func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
+	var in schema.LostCreateRequest
+
+	if err := render.Bind(r, &in); err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	resp := schema.LostCreateResponse{}
+
+	if err := in.Valadate(); err != nil {
+		resp.Message = err.Error()
+
+		render.JSON(w, r, resp)
+		return
+	}
+
+	in.Category = "家寻宝贝"
+
+	if err := c.aggr.Losts().Create(r.Context(), in); err != nil {
+		log.Println(err)
+		resp.Message = "录入信息失败，请联系管理员。"
+		resp.Message += fmt.Sprintf("(%s)", err.Error())
+
+		render.JSON(w, r, resp)
+		return
+	}
+
+	resp.Success = true
+
+	render.JSON(w, r, resp)
+}
+
+// LostPresignedURL
+// @Summary 失踪信息 图片上传token。
+// @Description 失踪信息 图片上传token。
+// @Tags    lost
+// @Accept  json
+// @Produce json
+// @Param   filename  query  string  true  "上传文件名"
+// @Param   length    query  int  true  "上传文件大小"
+// @Success 200 {object} schema.LostGetPresignedURLRequest
+// @Router  /v1/lost:uploadPresignedUrl [get] schema.LostGetPresignedURLResponse
+func (c LostController) GetUploadPresignedURL(w http.ResponseWriter, r *http.Request) {
+	var resp schema.LostGetPresignedURLResponse
+
+	filename := r.URL.Query().Get("filename")
+	length, err := strconv.Atoi(r.URL.Query().Get("length"))
+	if len(filename) > 0 && err == nil {
+		filenameSplit := strings.Split(filename, ".")
+		fileExt := filenameSplit[len(filenameSplit)-1]
+		url := util.GenQCloudCosPresigned(xid.New().String()+"."+fileExt, length)
+		if url != nil {
+			resp.Success = true
+			resp.Data = schema.LostGetPresignedURL{
+				URL: url.String(),
+			}
+		}
+	}
+
+	render.JSON(w, r, resp)
 }

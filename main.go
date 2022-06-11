@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"github.com/airdb/sailor/dbutil"
 	"github.com/airdb/sailor/deployutil"
@@ -55,7 +55,7 @@ func main() {
 	mux.Use(render.SetContentType(render.ContentTypeJSON))
 
 	// p := filepath.Join("/", deployutil.GetDeployStage(), "/", project)
-	p := filepath.Join("/", project)
+	p := fmt.Sprintf("/%s", project)
 
 	mux.Route(p, func(r chi.Router) {
 		r.Get("/version", faas.HandleVersion)
@@ -67,9 +67,13 @@ func main() {
 
 		lostController := controller.NewLostController(mysqlRepo)
 		r.Mount("/v1/lost", lostController.Routes())
+		r.Get("/v1/lost:uploadPresignedUrl", lostController.GetUploadPresignedURL)
 
 		rescueController := controller.NewRescueController(mysqlRepo)
 		r.Mount("/v1/rescue", rescueController.Routes())
+
+		passportController := controller.NewPassportController(mysqlRepo)
+		r.Post("/v1/passport:login", passportController.Login)
 	})
 
 	if os.Getenv("RUN_MODE") == "local" {
