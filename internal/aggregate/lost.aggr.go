@@ -163,8 +163,8 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 func (u *lostAggr) GetWxMpCode(ctx context.Context, id uint) []byte {
 	wx := util.NewWechatMiniProgram(util.NewWechat())
 	code, err := wx.CodeUnlimit(
-		`pages/article/detail/index`,
-		fmt.Sprintf("id=%d", id),
+		`pages/redirect/wxmpcode`,
+		fmt.Sprintf("id=%d&s=bbhj.lost", id),
 	)
 	log.Println(code, err)
 	if err != nil {
