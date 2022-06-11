@@ -1,13 +1,13 @@
 package util
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -15,7 +15,7 @@ import (
 )
 
 func TestGenQCloudCosPut(t *testing.T) {
-	log.Println(GenQCloudCosPresigned("demo.png", 5))
+	log.Println(GenQCloudCosPresigned("hzds.jpg", 7994439))
 
 	ak := os.Getenv("TencentyunAccessKeyID")
 	sk := os.Getenv("TencentyunAccessKeySecret")
@@ -42,8 +42,9 @@ func TestGenQCloudCosPut(t *testing.T) {
 		},
 	})
 
-	name := "test/example"
-	f := strings.NewReader("test")
+	name := "test/example.jpg"
+	fc, _ := os.ReadFile("/opt/src/github.com/xqbumu/hzds.jpg")
+	f := bytes.NewReader(fc)
 
 	_, err := c.Object.Put(context.Background(), name, f, nil)
 

@@ -112,6 +112,9 @@ type LostCreateRequest struct {
 	Category string `json:"category"`  // 寻亲类型
 	DataFrom string `json:"data_from"` // 信息来源
 	Follower string `json:"follower"`  // 跟进志愿者
+
+	// 关联图片
+	Images []string `json:"images"` // 图片列表
 }
 
 func (m *LostCreateRequest) Valadate() error {

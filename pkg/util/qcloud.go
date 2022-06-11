@@ -18,6 +18,7 @@ func GenQCloudCosPresigned(name string, length int) *url.URL {
 	}
 
 	type URLHeader struct {
+		Host          string `url:"-" header:"host"`
 		ContentLength int    `url:"-" header:"content-length"`
 		ContentType   string `url:"-" header:"-"`
 	}
@@ -27,11 +28,12 @@ func GenQCloudCosPresigned(name string, length int) *url.URL {
 	bn := os.Getenv("TencentyunBucketName")
 	ri := os.Getenv("TencentyunRegionID")
 	opt := &URLHeader{
+		Host:          fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bn, ri),
 		ContentLength: length,
-		// ContentType:   ctype,
+		// ContentType:   "image/jpeg",
 	}
 
-	u, _ := url.Parse(fmt.Sprintf("https://%s.cos.%s.myqcloud.com", bn, ri))
+	u, _ := url.Parse(opt.Host)
 	c := cos.NewClient(&cos.BaseURL{BucketURL: u}, &http.Client{})
 
 	ctx := context.Background()

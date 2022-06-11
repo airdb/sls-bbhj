@@ -67,10 +67,13 @@ func main() {
 
 		lostController := controller.NewLostController(mysqlRepo)
 		r.Mount("/v1/lost", lostController.Routes())
-		r.Get("/v1/lost:presignedUrl", lostController.GetPresignedURL)
+		r.Get("/v1/lost:uploadPresignedUrl", lostController.GetUploadPresignedURL)
 
 		rescueController := controller.NewRescueController(mysqlRepo)
 		r.Mount("/v1/rescue", rescueController.Routes())
+
+		passportController := controller.NewPassportController(mysqlRepo)
+		r.Post("/v1/passport:login", passportController.Login)
 	})
 
 	if os.Getenv("RUN_MODE") == "local" {

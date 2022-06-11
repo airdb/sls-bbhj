@@ -77,6 +77,13 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 		return nil, err
 	}
 
+	files, err := u.repo.Files().GetLostByID(ctx, id)
+	if err != nil {
+		log.Printf("get losts'file from storage failed: %s", err.Error())
+
+		return nil, err
+	}
+
 	stat, err := u.repo.Losts().GetStatByID(ctx, id)
 	if err != nil {
 		log.Printf("get losts from storage failed: %s", err.Error())
@@ -107,7 +114,16 @@ func (u *lostAggr) GetByID(ctx context.Context, id uint) (*schema.LostDetail, er
 			}
 		}(),
 		BirthedAt: item.BirthedAt.Format(defaultTimeFormat),
-		Carousel:  []schema.CarouselItem{},
+		Carousel: func() []schema.CarouselItem {
+			items := make([]schema.CarouselItem, len(files))
+			for k, v := range files {
+				items[k] = schema.CarouselItem{
+					ID:  v.ID,
+					URL: v.URL,
+				}
+			}
+			return items
+		}(),
 
 		// 失踪信息
 		MissAt:     item.MissedAt.Format(defaultTimeFormat),
@@ -150,6 +166,7 @@ func (u *lostAggr) GetWxMpCode(ctx context.Context, id uint) []byte {
 		`pages/article/detail/index`,
 		fmt.Sprintf("id=%d", id),
 	)
+	log.Println(code, err)
 	if err != nil {
 		return []byte("error")
 	}

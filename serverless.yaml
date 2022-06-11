@@ -38,16 +38,16 @@ inputs:
       env: ${stage}
       MAIN_DSN_WRITE: ${env:MAIN_DSN_WRITE}
       MAIN_DSN_READ: ${env:MAIN_DSN_READ}
-      WXKF_CORP_ID: ${env:WXKF_CORP_ID}
       WX_REDIS_ADDR: ${env:WX_REDIS_ADDR}
       WX_REDIS_PASSWD: ${env:WX_REDIS_PASSWD}
       WX_REDIS_DB: ${env:WX_REDIS_DB}
-      WXKF_SECRET: ${env:WXKF_SECRET}
-      WXKF_TOKEN: ${env:WXKF_TOKEN}
-      WXKF_ENCODING_AES_KEY: ${env:WXKF_ENCODING_AES_KEY}
       WXMP_REDIS_DB: ${env:WXMP_REDIS_DB}
       WXMP_APPID: ${env:WXMP_APPID}
       WXMP_APPSECRET: ${env:WXMP_APPSECRET}
+      WXKF_CORP_ID: ${env:WXKF_CORP_ID}
+      WXKF_SECRET: ${env:WXKF_SECRET}
+      WXKF_TOKEN: ${env:WXKF_TOKEN}
+      WXKF_ENCODING_AES_KEY: ${env:WXKF_ENCODING_AES_KEY}
       TencentyunAppID: ${env:TencentyunAppID}
       TencentyunAccessKeyID: ${env:TencentyunAccessKeyID}
       TencentyunAccessKeySecret: ${env:TencentyunAccessKeySecret}

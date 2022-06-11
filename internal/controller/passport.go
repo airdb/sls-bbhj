@@ -40,7 +40,7 @@ func (c PassportController) Routes() chi.Router {
 // @Param   code   body string true "登录凭证code"
 // @Success 200 {object} schema.PassportLoginResponse
 // @Router  /v1/passport:login [post]
-// @Example /mina/v1/passport
+// @Example /mina/v1/passport:login
 func (c PassportController) Login(w http.ResponseWriter, r *http.Request) {
 	in := schema.PassportLoginRequest{}
 

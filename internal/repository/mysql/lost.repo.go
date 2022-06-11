@@ -181,12 +181,42 @@ func (r *lost) Create(ctx context.Context, in schema.LostCreateRequest) error {
 		Follower: in.Follower,
 	}
 
-	if err := r.db.Create(item).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return err
-		}
-
+	tx := r.db.Begin()
+	err := tx.Create(item).Error
+	log.Println(item)
+	if err != nil {
+		tx.Rollback()
+		log.Println(err)
 		return errors.New("can not create lost")
+	}
+
+	if len(in.Images) > 0 {
+		var cnt int64
+		for k, v := range in.Images {
+			if len(v) == 0 {
+				continue
+			}
+			if err := tx.Where("url = ?", v).Count(&cnt).Error; err != nil {
+				return errors.New("文件重复，请重新选择文件。")
+			}
+			err = tx.Create(&schema.File{
+				Type:     "lost",
+				SortID:   k,
+				ParentID: int(item.ID),
+				URL:      v,
+			}).Error
+			if err != nil {
+				tx.Rollback()
+				log.Println(err)
+				return errors.New("can not create file")
+			}
+		}
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		return errors.New("can not commit lost")
 	}
 
 	return nil

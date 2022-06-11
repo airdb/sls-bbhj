@@ -13,7 +13,6 @@ import (
 	"github.com/airdb/sls-bbhj/pkg/schema"
 	"github.com/airdb/sls-bbhj/pkg/util"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/jwtauth/v5"
 	"github.com/go-chi/render"
 	"github.com/rs/xid"
 )
@@ -37,22 +36,24 @@ func (c LostController) Routes() chi.Router {
 	r.Get("/{lost_id}", c.Show)
 	r.Get("/{lost_id}/share/{share_key}/callback", c.ShareCallback)
 	r.Get("/{lost_id}/"+aggregate.LOST_WXMP_CODE_FILENAME, c.GetMpCode)
+	r.Post("/", c.Create)
 
-	c.aggr.Passport().Middleware(r, func(r chi.Router) {
-		r.Use(func(next http.Handler) http.Handler {
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				token, _, _ := jwtauth.FromContext(r.Context())
+	// 权限判断
+	// c.aggr.Passport().Middleware(r, func(r chi.Router) {
+	// 	r.Use(func(next http.Handler) http.Handler {
+	// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 			token, _, _ := jwtauth.FromContext(r.Context())
 
-				if token != nil && !c.allowCreate(token.Subject()) {
-					http.Error(w, "no permission", http.StatusUnauthorized)
-					return
-				}
+	// 			if token != nil && !c.allowCreate(token.Subject()) {
+	// 				http.Error(w, "no permission", http.StatusUnauthorized)
+	// 				return
+	// 			}
 
-				next.ServeHTTP(w, r)
-			})
-		})
-		r.Post("/", c.Create)
-	})
+	// 			next.ServeHTTP(w, r)
+	// 		})
+	// 	})
+	// 	r.Post("/", c.Create)
+	// })
 
 	return r
 }
@@ -285,7 +286,7 @@ func (c LostController) GetMpCode(w http.ResponseWriter, r *http.Request) {
 // @Tags    lost
 // @Accept  json
 // @Produce json
-// @Param   lost_id  path  int  true  "Lost ID"
+// @Param   message  body  schema.LostCreateRequest  true  "Lost Info"
 // @Success 200 {object} schema.LostCreateResponse
 // @Router  /v1/lost [post]
 func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
@@ -306,9 +307,12 @@ func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	in.Category = "家寻宝贝"
+
 	if err := c.aggr.Losts().Create(r.Context(), in); err != nil {
 		log.Println(err)
 		resp.Message = "录入信息失败，请联系管理员。"
+		resp.Message += fmt.Sprintf("(%s)", err.Error())
 
 		render.JSON(w, r, resp)
 		return
@@ -328,14 +332,16 @@ func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
 // @Param   filename  query  string  true  "上传文件名"
 // @Param   length    query  int  true  "上传文件大小"
 // @Success 200 {object} schema.LostGetPresignedURLRequest
-// @Router  /v1/lost:presignedUrl [get] schema.LostGetPresignedURLResponse
-func (c LostController) GetPresignedURL(w http.ResponseWriter, r *http.Request) {
+// @Router  /v1/lost:uploadPresignedUrl [get] schema.LostGetPresignedURLResponse
+func (c LostController) GetUploadPresignedURL(w http.ResponseWriter, r *http.Request) {
 	var resp schema.LostGetPresignedURLResponse
 
 	filename := r.URL.Query().Get("filename")
 	length, err := strconv.Atoi(r.URL.Query().Get("length"))
 	if len(filename) > 0 && err == nil {
-		url := util.GenQCloudCosPresigned(xid.New().String()+"_"+filename, length)
+		filenameSplit := strings.Split(filename, ".")
+		fileExt := filenameSplit[len(filenameSplit)-1]
+		url := util.GenQCloudCosPresigned(xid.New().String()+"."+fileExt, length)
 		if url != nil {
 			resp.Success = true
 			resp.Data = schema.LostGetPresignedURL{

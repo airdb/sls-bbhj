@@ -28,10 +28,10 @@ dev: swag
 	env=dev go run $(LDFLAGS) main.go
 
 deploy:
-	sls deploy --stage test
+	sls deploy --stage test --profile airdb
 
 release:
-	sls deploy --stage release
+	sls deploy --stage release --profile airdb
 
 log:
 	sls logs --tail --stage test
