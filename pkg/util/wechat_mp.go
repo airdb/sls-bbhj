@@ -89,7 +89,7 @@ func (wx *WechatMiniProgram) CodeUnlimit(page, scene string) (response []byte, e
 	cacheContent.Data, err = qc.GetWXACodeUnlimit(codeParams)
 
 	if err != nil {
-		log.Println(err)
+		log.Println("query CodeUnlimit", codeParams, err)
 	}
 
 	// 缓存30天
