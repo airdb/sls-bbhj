@@ -191,12 +191,13 @@ func (r *lost) Create(ctx context.Context, in schema.LostCreateRequest) error {
 	}
 
 	if len(in.Images) > 0 {
-		var cnt int64
 		for k, v := range in.Images {
+			var cnt int64
 			if len(v) == 0 {
 				continue
 			}
-			if err := tx.Where("url = ?", v).Count(&cnt).Error; err != nil {
+			if err := tx.Model(&schema.File{}).Where("url = ?", v).Count(&cnt).Error; err != nil || cnt > 0 {
+				log.Println(err)
 				return errors.New("文件重复，请重新选择文件。")
 			}
 			err = tx.Create(&schema.File{
