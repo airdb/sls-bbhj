@@ -142,9 +142,9 @@ func (m *LostCreateRequest) Valadate() error {
 		return fmt.Errorf("请输入 特征")
 	}
 
-	if len(m.Details) == 0 {
-		return fmt.Errorf("请输入 失踪详情")
-	}
+	// if len(m.Details) == 0 {
+	// 	return fmt.Errorf("请输入 失踪详情")
+	// }
 
 	if len(m.Category) == 0 {
 		return fmt.Errorf("请输入 寻亲类型")
