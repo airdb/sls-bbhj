@@ -34,6 +34,25 @@ type LostGetResponse struct {
 	Success bool        `json:"success"`
 }
 
+type LostCreateReq struct {
+	Name           string   `json:"name"`
+	Sex            uint     `json:"sex"`
+	Age            int      `json:"age"`
+	AddressDetails string   `json:"address_details"`
+	MissedProvince string   `json:"missed_province"`
+	MissedCity     string   `json:"missed_city"`
+	BirthedAt      uint     `json:"birthed_at"`
+	MissedAt       uint     `json:"missed_at"`
+	Character      uint     `json:"character"`
+	Height         uint     `json:"height"`
+	DataFrom       string   `json:"data_from"`
+	Follower       string   `json:"follower"`
+	Imgs           []string `json:"imgs"`
+}
+
+type LostCreateResp struct {
+}
+
 type LostMpCode struct {
 }
 

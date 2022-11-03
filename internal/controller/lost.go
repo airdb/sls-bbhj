@@ -33,6 +33,7 @@ func (c LostController) Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get("/", c.List)
+	r.Post("/create", c.Create)
 	r.Get("/{lost_id}", c.Show)
 	r.Get("/{lost_id}/share/{share_key}/callback", c.ShareCallback)
 	r.Get("/{lost_id}/"+aggregate.LOST_WXMP_CODE_FILENAME, c.GetMpCode)
@@ -146,6 +147,34 @@ func (c LostController) Show(w http.ResponseWriter, r *http.Request) {
 		Data:    item,
 		Success: true,
 	}
+
+	render.JSON(w, r, resp)
+}
+
+// LostCreate
+// @Summary 新建失踪信息
+// @Description 失踪信息 详情。
+// @Tags    lost
+// @Accept  json
+// @Produce json
+// @Param   schema.LostCreateReq body schema.LostCreateReq true "body"
+// @Success 200 {object} schema.LostGetResponse
+// @Router  /v1/lost/create [post]
+func (c LostController) Create(w http.ResponseWriter, r *http.Request) {
+	resp := schema.LostGetResponse{
+		Success: false,
+	}
+
+	// Todo: 保存失踪信息。
+	item, err := c.aggr.Losts().GetByID(r.Context(), uint(5))
+	if err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	resp.Success = true
+	resp.Data = item
 
 	render.JSON(w, r, resp)
 }
